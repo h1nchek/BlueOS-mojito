@@ -15,7 +15,7 @@ ROOT="/path/to/BlueOS-mojito"
 mkdir -p .repo/local_manifests
 cp "$ROOT/manifests/mojito-lineage24.xml" .repo/local_manifests/
 repo init -u https://github.com/LineageOS/android.git -b lineage-24.0 --git-lfs --no-clone-bundle
-repo sync -j8
+repo sync -j8 --fail-fast
 python3 "$ROOT/scripts/patch-mojito-device-tree.py"
 ```
 
@@ -24,8 +24,10 @@ python3 "$ROOT/scripts/patch-mojito-device-tree.py"
 ```bash
 source build/envsetup.sh
 breakfast mojito
-m bacon -j"$(nproc)"
+m bacon -j8
 ```
+
+The wrapper defaults to at most 8 parallel jobs to limit memory pressure. Increase the job count only if the build host has sufficient RAM.
 
 Если чистая LineageOS не собирается, сначала исправь ошибки device/vendor/kernel-интеграции. Не переходи к BlueOS, пока базовая сборка не проходит.
 
