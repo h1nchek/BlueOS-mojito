@@ -8,8 +8,8 @@ ANDROID_DIR="${1:-$HOME/android/blueos-mojito}"
 DEFAULT_JOBS="$(nproc)"
 if (( DEFAULT_JOBS > 8 )); then DEFAULT_JOBS=8; fi
 JOBS="${JOBS:-$DEFAULT_JOBS}"
-if [[ ! "$JOBS" =~ ^[1-9][0-9]*$ ]]; then
-  echo "ERROR: JOBS must be a positive integer; got: $JOBS" >&2
+if [[ ! "$JOBS" =~ ^[1-9][0-9]*$ ]] || (( JOBS > 8 )); then
+  echo "ERROR: JOBS must be an integer from 1 to 8; got: $JOBS" >&2
   exit 1
 fi
 
