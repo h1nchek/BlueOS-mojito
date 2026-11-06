@@ -4,7 +4,9 @@ on:
   push:
     paths:
       - "scripts/audit-vendor-blobs.py"
+      - "scripts/audit-vintf.py"
       - "tests/test_vendor_blob_audit.py"
+      - "tests/test_vintf_audit.py"
       - ".github/workflows/vendor-audit-tool.yml"
   pull_request:
     paths:
