@@ -20,10 +20,12 @@ on:
       - "scripts/audit-vintf.py"
       - "scripts/audit-soong-deps.py"
       - "scripts/patch-mojito-device-tree.py"
+      - "scripts/validate_ota_zip.py"
       - "tests/test_vendor_blob_audit.py"
       - "tests/test_vintf_audit.py"
       - "tests/test_soong_audit.py"
       - "tests/test_device_tree_patch.py"
+      - "tests/test_validate_ota_zip.py"
       - ".github/workflows/vendor-audit-tool.yml"
 
 jobs:
