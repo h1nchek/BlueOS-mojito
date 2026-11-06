@@ -22,6 +22,7 @@ class SoongAuditTests(unittest.TestCase):
                 '  name: "libalpha",\n'
                 '  shared_libs: ["libbeta", "libc"],\n'
                 '  static_libs: ["libsupport"],\n'
+                '  defaults: ["common_defaults"],\n'
                 '}\n'
                 'cc_library { name: "libbeta" }\n'
             )
@@ -32,6 +33,9 @@ class SoongAuditTests(unittest.TestCase):
             )
             self.assertEqual(
                 modules[0].dependencies["static_libs"], ["libsupport"]
+            )
+            self.assertEqual(
+                modules[0].dependencies["defaults"], ["common_defaults"]
             )
 
     def test_ignores_nested_properties_and_comments(self):
