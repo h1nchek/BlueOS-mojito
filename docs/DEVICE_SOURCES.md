@@ -106,4 +106,4 @@ python3 scripts/audit-soong-deps.py --strict \
   vendor/qcom/opensource/display/Android.bp
 ```
 
-The default mode reports dependencies not found in the supplied file set without treating them as build failures. `--strict` returns 1 for any such unindexed dependency. Because Soong namespaces and project-wide module visibility affect resolution, an unindexed name is not necessarily missing. This script does not parse the full Blueprint language and cannot replace Soong's actual dependency graph or a successful product build.
+The default mode reports dependencies not found in the supplied file set without treating them as build failures. `--strict` returns 1 for any such unindexed dependency. Because Soong namespaces and project-wide module visibility affect resolution, an unindexed name is not necessarily missing. The parser now rejects unterminated module blocks as malformed input (exit status 2), preventing a partial index from appearing successful. This script does not parse the full Blueprint language and cannot replace Soong's actual dependency graph or a successful product build.
