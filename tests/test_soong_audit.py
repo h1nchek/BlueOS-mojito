@@ -1,4 +1,6 @@
 import importlib.util
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -46,6 +48,21 @@ class SoongAuditTests(unittest.TestCase):
             self.assertEqual(len(modules), 1)
             self.assertEqual(modules[0].name, "real")
             self.assertEqual(modules[0].dependencies["shared_libs"], ["actual"])
+
+    def test_cli_strict_returns_one_for_unindexed_dependency(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "Android.bp"
+            path.write_text(
+                'cc_library { name: "libalpha", shared_libs: ["libexternal"] }'
+            )
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT), "--strict", str(path)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("UNINDEXED libalpha", result.stdout)
 
     def test_strict_mode_flags_unindexed_dependency(self):
         with tempfile.TemporaryDirectory() as tmp:
