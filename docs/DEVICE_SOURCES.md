@@ -23,7 +23,7 @@ All five repositories expose branch `17.0`:
 - `BoardConfig.mk` selects `kernel/xiaomi/mojito` and `mojito_defconfig`, asserts `mojito,sunny`, and includes common and device vendor board configs.
 - `BoardConfigCommon.mk` includes `vendor/xiaomi/sm6150-common/BoardConfigVendor.mk`.
 - `sm6150.mk` inherits `vendor/xiaomi/sm6150-common/sm6150-common-vendor.mk` and references Qualcomm CAF common and SM8150 audio projects.
-- The inspected common vendor makefile contains a substantial `PRODUCT_COPY_FILES` list under its `proprietary/` tree. File-by-file blob coverage and firmware matching have not yet been established.
+- The common and device vendor makefiles contain large generated `PRODUCT_COPY_FILES` lists under their respective `proprietary/` trees. Spot checks confirmed representative files are present in GitHub: common `gps.conf` and `libqmi_cci.so`; device `a615_zap.elf` and `com.qti.tuned.default.bin`. Binary blobs were fetched successfully in base64 mode. These checks prove only those sample paths exist; they do not prove complete coverage of every makefile reference. No root-level `proprietary-files.txt`, `extract-files.sh`, or `setup-makefiles.sh` was found at the checked paths, so a full automated inventory comparison is still unavailable.
 
 ## BlueOS patch integration
 
@@ -50,7 +50,7 @@ Upstream BlueOS targets LineageOS 24.0 / Android 17. Its main development device
 ## Release blockers
 
 1. Validate the corrected fallback manifest with `repo sync` if it is needed.
-2. Audit vendor blob inventories and firmware compatibility.
+2. Complete a full comparison of every `PRODUCT_COPY_FILES`/Soong prebuilt reference against the committed proprietary tree, then verify firmware compatibility.
 3. Confirm all five `17.0` repositories build against LineageOS 24.0.
 4. Run a clean full build and inspect the ZIP and SHA-256.
 5. Boot-test the exact hardware and validate radio, Wi-Fi, Bluetooth, camera, audio, sensors, fingerprint, charging, encryption and OTA.
