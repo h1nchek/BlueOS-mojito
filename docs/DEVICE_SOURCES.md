@@ -79,3 +79,17 @@ python3 scripts/audit-vintf.py path/to/manifest.xml path/to/compatibility_matrix
 ```
 
 It verifies XML well-formedness, accepted VINTF root tags, non-empty HAL names/FQNames, and duplicate exact HAL instance declarations inside each input file. It is intentionally conservative: duplicate declarations across separate files, framework/vendor matching, target-level compatibility, service registration, and runtime behavior require the Android build tools (especially `checkvintf`) in a complete synced tree.
+
+
+## Soong module source preflight
+
+`scripts/audit-soong-deps.py` indexes named module blocks in explicitly supplied `Android.bp` files and compares literal module names referenced by common dependency properties. Example:
+
+```bash
+python3 scripts/audit-soong-deps.py --strict \
+  vendor/xiaomi/mojito/Android.bp \
+  vendor/xiaomi/sm6150-common/Android.bp \
+  vendor/qcom/opensource/display/Android.bp
+```
+
+The default mode reports dependencies not found in the supplied file set without treating them as build failures. `--strict` returns 1 for any such unindexed dependency. Because Soong namespaces and project-wide module visibility affect resolution, an unindexed name is not necessarily missing. This script does not parse the full Blueprint language and cannot replace Soong's actual dependency graph or a successful product build.
