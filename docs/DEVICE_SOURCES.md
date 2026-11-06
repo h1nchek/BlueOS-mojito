@@ -107,3 +107,8 @@ python3 scripts/audit-soong-deps.py --strict \
 ```
 
 The default mode reports dependencies not found in the supplied file set without treating them as build failures. `--strict` returns 1 for any such unindexed dependency. Because Soong namespaces and project-wide module visibility affect resolution, an unindexed name is not necessarily missing. The parser now rejects unterminated module blocks as malformed input (exit status 2), preventing a partial index from appearing successful. This script does not parse the full Blueprint language and cannot replace Soong's actual dependency graph or a successful product build.
+
+
+## Local repo manifest structural audit
+
+Run `python3 scripts/audit_repo_manifests.py manifests/*.xml` before syncing. The check detects duplicate project paths, missing revisions, undeclared remotes, and malformed `extend-project` entries. It does not check whether remote URLs or revisions are reachable; `repo sync` is still the source of truth.
