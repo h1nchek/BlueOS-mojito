@@ -41,6 +41,16 @@ Source inspection does not prove that all proprietary files referenced by genera
 
 Upstream BlueOS targets LineageOS 24.0 / Android 17. Its main development device is Pixel 6a; that does not establish support for mojito. Device branch `17.0` is a plausible Android 17 target, but its name alone does not prove compatibility with the exact LineageOS platform manifest. Every BlueOS patch must apply on the synced revisions.
 
+### Soong namespace and vendor module cross-check
+
+The `17.0` vendor/device `Android.bp` files were inspected directly:
+
+- Device vendor namespace imports: `hardware/qcom-caf/sm8150`, `hardware/xiaomi`, `vendor/qcom/opensource/display`, and `vendor/xiaomi/sm6150-common`.
+- Common vendor namespace imports: `device/xiaomi/sm6150-common`, `hardware/qcom-caf/sm8150`, `hardware/qcom-caf/wlan`, `hardware/xiaomi`, `vendor/qcom/opensource/dataservices`, and `vendor/qcom/opensource/display`.
+- Common device namespace imports: `hardware/xiaomi`, `hardware/google/interfaces`, `hardware/google/pixel/pixelstats`, `hardware/google/pixel/power-libperfmgr`, `hardware/qcom-caf/common/libqti-perfd-client`, and `hardware/lineage/interfaces/power-libperfmgr`.
+
+The proprietary vendor `Android.bp` files contain many prebuilt shared libraries, and dependency arrays also occur under architecture-specific `target` blocks. The Soong preflight tool therefore collects literal dependency arrays at nested property depth as well as module-level properties. It still cannot resolve the imported namespaces or determine whether every dependency is available in the exact synced LineageOS revision.
+
 ## Local manifests
 
 - [mojito-lineage24.xml](../manifests/mojito-lineage24.xml): five device-side repositories.
