@@ -1,53 +1,45 @@
 # Redmi Note 10 (mojito) — source audit
 
-## Finding
+Checked on 2026-11-06. This is source-level validation only, not a successful build or boot test.
 
-A substantially better source set exists than the older Android 11–15 trees listed in the initial notes: the `ximi-mojito` GitHub organization publishes a coordinated set of device, common-device, kernel, and vendor repositories on branch `17.0`. This is the strongest candidate for the BlueOS / LineageOS 24.0 target.
+## Candidate device source set
 
-The source set is **not yet build- or boot-verified by this project**. Branch names and matching configuration are good evidence of intended alignment, not proof that a clean build succeeds or that the resulting image is safe to use.
+The following repositories expose branch `17.0`:
 
-## Primary candidate source set
+| Build path | Repository | Verification |
+|---|---|---|
+| `device/xiaomi/mojito` | https://github.com/ximi-mojito/device_xiaomi_mojito | Files fetched and inspected |
+| `device/xiaomi/sm6150-common` | https://github.com/ximi-mojito/device_xiaomi_sm6150-common | Branch exists; contents still need review |
+| `kernel/xiaomi/mojito` | https://github.com/ximi-mojito/android_kernel_xiaomi_mojito | Branch and `arch/arm64/configs/mojito_defconfig` verified |
+| `vendor/xiaomi/mojito` | https://github.com/ximi-mojito/android_vendor_xiaomi_mojito | Branch exists; contents still need review |
+| `vendor/xiaomi/sm6150-common` | https://github.com/ximi-mojito/android_vendor_xiaomi_sm6150-common | Branch exists; contents still need review |
 
-All repositories below are under https://github.com/ximi-mojito and currently expose branch `17.0`.
+## Device-tree cross-checks
 
-| Build path | Repository |
-|---|---|
-| `device/xiaomi/mojito` | https://github.com/ximi-mojito/device_xiaomi_mojito |
-| `device/xiaomi/sm6150-common` | https://github.com/ximi-mojito/device_xiaomi_sm6150-common |
-| `kernel/xiaomi/mojito` | https://github.com/ximi-mojito/android_kernel_xiaomi_mojito |
-| `vendor/xiaomi/mojito` | https://github.com/ximi-mojito/android_vendor_xiaomi_mojito |
-| `vendor/xiaomi/sm6150-common` | https://github.com/ximi-mojito/android_vendor_xiaomi_sm6150-common |
+- `AndroidProducts.mk` registers `lineage_mojito.mk`.
+- `lineage_mojito.mk` defines product `lineage_mojito`, device `mojito`, model `Redmi Note 10`.
+- `BoardConfig.mk` sets `TARGET_KERNEL_SOURCE := kernel/xiaomi/mojito` and `TARGET_KERNEL_CONFIG := mojito_defconfig`.
+- OTA assert names are `mojito,sunny`.
+- The device tree inherits `device/xiaomi/sm6150-common/BoardConfigCommon.mk`.
+- The product makefile inherits `vendor/xiaomi/mojito/mojito-vendor.mk` and the LineageOS common phone product.
 
-### Configuration cross-checks
+## BlueOS compatibility
 
-- The device tree identifies the product as `lineage_mojito`, model Redmi Note 10, and accepts `mojito,sunny` as OTA assert names.
-- Its `BoardConfig.mk` sets `TARGET_KERNEL_SOURCE := kernel/xiaomi/mojito` and `TARGET_KERNEL_CONFIG := mojito_defconfig`.
-- The kernel repository's recursive Git tree contains `arch/arm64/configs/mojito_defconfig`.
-- The device tree inherits `device/xiaomi/sm6150-common` and the device/common vendor makefiles, matching the other repositories in the set.
-- The device tree and kernel branches show commits by their maintainers in October 2026; the device vendor tree shows updates in February 2026. The common device tree also has October 2026 updates.
+Upstream BlueOS describes itself as LineageOS 24.0 / Android 17 and documents adding `vendor/blueos` plus a product include at `vendor/extra/product.mk`. Upstream's own tested device is Pixel 6a; this does not establish that mojito builds successfully.
 
-## Local manifest
+The device source branch is named `17.0`. It appears intended for the Android 17 generation, but exact platform compatibility, required patches, vendor blobs and firmware remain to be confirmed by a clean build.
 
-Use [manifests/mojito-lineage24.xml](../manifests/mojito-lineage24.xml) as the source-set reference. It pins the five device-side repositories to branch `17.0`. The upstream BlueOS vendor manifest remains separate in [manifests/blueos.xml](../manifests/blueos.xml).
+## Local manifests
 
-## Other trees found
+- [mojito-lineage24.xml](../manifests/mojito-lineage24.xml): five device-side repositories.
+- [blueos.xml](../manifests/blueos.xml): upstream BlueOS vendor tree.
 
-- https://github.com/ProjectEverest-Devices/android_device_xiaomi_mojito — branch `15`, with a matching `sm6150-common` branch. Useful as an older Android 15 reference, but not the preferred Android 17 / LineageOS 24.0 base.
-- https://github.com/crdroidandroid/android_device_xiaomi_mojito — branch `15.0`; older Android 15 base.
-- https://github.com/xiaomi-sdm678/android_device_xiaomi_mojito — LineageOS 21 branch; older base.
-- https://github.com/VoltageOS-Devices/android_device_xiaomi_mojito — older device tree.
+## Release blockers
 
-## Manifest caveat
+1. Verify all device/common/vendor dependency declarations and proprietary blob completeness.
+2. Confirm that the target LineageOS 24.0 platform branch is compatible with the five `17.0` repositories.
+3. Run a clean product configuration and full build.
+4. Inspect the output archive and calculate SHA-256.
+5. Boot-test the exact `mojito` hardware and validate radio, Wi-Fi, Bluetooth, camera, audio, sensors, fingerprint, charging, encryption and OTA.
 
-The `lineage-24.0/mojito.sh` helper in the separate `ximi-mojito/mojito_manifests` repository refers to `ximi-mojito-test` clone URLs and has the kernel clone commented out. Do not copy that helper verbatim. The source references here instead point to the public `ximi-mojito` repositories and explicitly include the kernel.
-
-That helper's patch collection also includes a permissive SELinux policy patch. It is deliberately not included in this project's manifest; security policy changes need individual review and should not be applied merely to make a build pass.
-
-## Remaining validation
-
-- Confirm the full set of branch revisions and any external dependencies used by the target LineageOS 24.0 manifest.
-- Review build configuration and patch requirements against the current LineageOS 24.0 source.
-- Complete a clean build and maintainers' checks before considering any device testing.
-- Do not treat any build as ready to flash until it has been independently tested on the exact device variant.
-
-No signing keys, private credentials, or firmware images belong in this repository.
+No release ZIP, boot image or recovery image is produced by this repository yet. No private signing keys or firmware images should be committed here.
