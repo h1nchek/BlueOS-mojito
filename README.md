@@ -111,6 +111,14 @@ Read [docs/BUILDING.md](docs/BUILDING.md) before using it. Build the plain Linea
 
 Do not flash images or ZIPs unless they are explicitly built for `mojito`, verified with checksums, and tested. An incompatible image can erase data or make the phone unable to boot. Keep a separate backup. Never publish signing keys, passwords, or private credentials.
 
+## Лицензия / Licensing
+
+The original scripts, documentation, diagrams, and project glue authored in this repository are licensed under [Apache-2.0](LICENSE), unless a file states otherwise.
+
+**Third-party components are not relicensed by this notice.** LineageOS/Android, Linux kernel sources, Qualcomm components, device trees, and vendor repositories retain their own applicable licenses and notices. Proprietary Xiaomi/vendor blobs may have separate redistribution restrictions; this repository license does not grant permission to redistribute them.
+
+**RU:** Оригинальные скрипты, документация, схемы и вспомогательные файлы этого репозитория распространяются по Apache-2.0, если в конкретном файле не указано иное. Лицензия не меняет условия для сторонних компонентов: Android/LineageOS, ядра Linux, Qualcomm, device tree и vendor-репозиториев. Проприетарные файлы Xiaomi могут иметь отдельные ограничения на распространение; Apache-2.0 не предоставляет прав на их распространение.
+
 ## Links
 
 - BlueOS upstream: https://github.com/GDmio/BlueOS
