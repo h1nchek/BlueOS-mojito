@@ -1,4 +1,6 @@
 import importlib.util
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -35,6 +37,29 @@ class CollectEntriesTests(unittest.TestCase):
                 "PRODUCT_COPY_FILES += vendor/a.bin:vendor/a.bin\n"
             )
             self.assertEqual(MODULE.collect_entries(makefile), ["vendor/a.bin"])
+
+
+    def test_unresolved_source_path_returns_incomplete_status(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            makefile = root / "vendor.mk"
+            makefile.write_text(
+                "PRODUCT_COPY_FILES += $(LOCAL_PATH)/blob.bin:vendor/blob.bin\\n"
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    str(root),
+                    "--makefile",
+                    "vendor.mk",
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("Unresolved variable paths: 1", result.stdout)
 
 
 if __name__ == "__main__":
