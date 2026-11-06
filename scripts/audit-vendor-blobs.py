@@ -33,14 +33,14 @@ def collect_entries(makefile: Path) -> list[str]:
         if continued:
             continue
         if logical.lstrip().startswith("PRODUCT_COPY_FILES"):
-            payload = re.sub(r"^\\s*PRODUCT_COPY_FILES\\s*(?:\\+|:)??=\\s*", "", logical)
+            payload = re.sub(r"^\s*PRODUCT_COPY_FILES\s*(?:\+=|:=|=)\s*", "", logical)
             for token in payload.split():
                 match = COPY_ENTRY.match(token)
                 if match:
                     entries.append(match.group(1))
         logical = ""
     if logical and logical.lstrip().startswith("PRODUCT_COPY_FILES"):
-        payload = re.sub(r"^\\s*PRODUCT_COPY_FILES\\s*(?:\\+|:)??=\\s*", "", logical)
+        payload = re.sub(r"^\s*PRODUCT_COPY_FILES\s*(?:\+=|:=|=)\s*", "", logical)
         for token in payload.split():
             match = COPY_ENTRY.match(token)
             if match:
