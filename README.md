@@ -1,4 +1,4 @@
- <div align="center">
+<div align="center">
 
 # BlueOS for Xiaomi Redmi Note 10
 
