@@ -36,6 +36,28 @@ class VintfAuditTests(unittest.TestCase):
             errors, _ = MODULE.audit(path)
             self.assertTrue(any("duplicate HAL instance" in item for item in errors))
 
+    def test_hal_without_name_is_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "manifest.xml"
+            path.write_text('<manifest><hal><fqname>@1.0::IFoo/default</fqname></hal></manifest>')
+            errors, count = MODULE.audit(path)
+            self.assertTrue(any("has no <name>" in item for item in errors))
+            self.assertEqual(count, 1)
+
+    def test_empty_fqname_is_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "manifest.xml"
+            path.write_text('<manifest><hal><name>vendor.foo</name><fqname> </fqname></hal></manifest>')
+            errors, _ = MODULE.audit(path)
+            self.assertTrue(any("empty <fqname>" in item for item in errors))
+
+    def test_empty_fqname_is_reported_for_grouped_legacy_hal(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "manifest.xml"
+            path.write_text('<manifest><hal><name>vendor.foo</name><name>vendor.bar</name><fqname> </fqname></hal></manifest>')
+            errors, _ = MODULE.audit(path)
+            self.assertTrue(any("empty <fqname>" in item for item in errors))
+
     def test_grouped_legacy_hal_names_are_not_misclassified(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "manifest.xml"
