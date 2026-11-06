@@ -1,53 +1,57 @@
 # Redmi Note 10 (mojito) — source audit
 
-Checked on 2026-11-06. This is source-level validation only, not a successful build or boot test.
+Checked on 2026-11-06. Source-level validation only; no successful build or boot test has been recorded.
 
 ## Candidate device source set
 
-The following repositories expose branch `17.0`:
+All five repositories expose branch `17.0`:
 
 | Build path | Repository | Verification |
 |---|---|---|
-| `device/xiaomi/mojito` | https://github.com/ximi-mojito/device_xiaomi_mojito | Product, device and board makefiles fetched and inspected |
-| `device/xiaomi/sm6150-common` | https://github.com/ximi-mojito/device_xiaomi_sm6150-common | Common board and product makefiles fetched and inspected |
-| `kernel/xiaomi/mojito` | https://github.com/ximi-mojito/android_kernel_xiaomi_mojito | Branch and `arch/arm64/configs/mojito_defconfig` verified |
-| `vendor/xiaomi/mojito` | https://github.com/ximi-mojito/android_vendor_xiaomi_mojito | Device vendor makefile fetched and inspected |
-| `vendor/xiaomi/sm6150-common` | https://github.com/ximi-mojito/android_vendor_xiaomi_sm6150-common | `BoardConfigVendor.mk` exists; further content audit required |
+| `device/xiaomi/mojito` | https://github.com/ximi-mojito/device_xiaomi_mojito | Product, device and board makefiles inspected |
+| `device/xiaomi/sm6150-common` | https://github.com/ximi-mojito/device_xiaomi_sm6150-common | Common board and product makefiles inspected |
+| `kernel/xiaomi/mojito` | https://github.com/ximi-mojito/android_kernel_xiaomi_mojito | Branch and `mojito_defconfig` verified |
+| `vendor/xiaomi/mojito` | https://github.com/ximi-mojito/android_vendor_xiaomi_mojito | Device vendor makefile inspected |
+| `vendor/xiaomi/sm6150-common` | https://github.com/ximi-mojito/android_vendor_xiaomi_sm6150-common | Vendor board makefile exists; blob audit remains |
 
 ## Verified makefile relationships
 
 - `AndroidProducts.mk` registers `lineage_mojito.mk`.
-- `lineage_mojito.mk` defines `lineage_mojito`, device `mojito`, model `Redmi Note 10`, and inherits the LineageOS common phone product.
+- `lineage_mojito.mk` defines `lineage_mojito`, device `mojito`, model `Redmi Note 10`, and inherits LineageOS common phone configuration.
 - `device.mk` inherits `device/xiaomi/sm6150-common/sm6150.mk` and `vendor/xiaomi/mojito/mojito-vendor.mk`.
-- `device.mk` also conditionally inherits optional Leica camera and MIUI-app vendor configs.
-- `BoardConfig.mk` selects `kernel/xiaomi/mojito` and `mojito_defconfig`, asserts `mojito,sunny`, and includes the common board config plus device vendor board config.
+- `device.mk` optionally inherits Leica camera and MIUI-app vendor configs if those directories exist.
+- `BoardConfig.mk` selects `kernel/xiaomi/mojito` and `mojito_defconfig`, asserts `mojito,sunny`, and includes common and device vendor board configs.
 - `BoardConfigCommon.mk` includes `vendor/xiaomi/sm6150-common/BoardConfigVendor.mk`.
-- `sm6150.mk` inherits `vendor/xiaomi/sm6150-common/sm6150-common-vendor.mk` and references Qualcomm CAF common / SM8150 audio projects.
+- `sm6150.mk` inherits `vendor/xiaomi/sm6150-common/sm6150-common-vendor.mk` and references Qualcomm CAF common and SM8150 audio projects.
+
+## BlueOS patch integration
+
+Upstream `vendorsetup.sh` runs `scripts/apply-patches.sh` when `build/envsetup.sh` is sourced. The patch script exits nonzero if any patch fails, so the build script's `set -e` should stop at that stage rather than silently producing a non-BlueOS build.
+
+Upstream `manifests/blueos-pinned.xml` currently contains 12 `extend-project` entries with empty `name` values. That is not a usable project selector. This repository now carries a corrected local manifest, `manifests/blueos-pinned.xml`, using the 12 project paths in the same order as upstream `scripts/export-patches.sh`. It should only be used if fresh-branch patch application fails. The revision-to-path mapping is inferred from the matching ordered upstream lists and still needs validation by an actual `repo sync`.
 
 ## Manifest coverage and unresolved dependencies
 
-The local device manifest declares all five direct device, kernel and vendor repositories. The makefiles also reference platform projects expected from the LineageOS manifest and optional external vendor projects. Optional Leica/MIUI camera trees are guarded by `inherit-product-if-exists`; they are not currently declared by this port manifest.
+The local device manifest declares all five direct device, kernel and vendor repositories. The makefiles also reference platform projects expected from the LineageOS manifest and optional external vendor projects. The optional Leica/MIUI trees are guarded by `inherit-product-if-exists` and are not declared by this port manifest.
 
-The source-level inspection does **not** prove that all proprietary files referenced by generated vendor makefiles exist, that firmware matches, or that every Qualcomm CAF project resolves to a compatible revision. The full common product makefile and all vendor blob lists still need a clean sync/build audit.
+Source inspection does not prove that all proprietary files referenced by generated vendor makefiles exist, that firmware matches, or that every Qualcomm CAF project resolves to a compatible revision. A clean sync and product build are still required.
 
-## BlueOS compatibility
+## Compatibility
 
-Upstream BlueOS identifies LineageOS 24.0 / Android 17 as its base and documents adding `vendor/blueos` plus a product include at `vendor/extra/product.mk`. Its README identifies Pixel 6a as the main development device; that does not establish support for mojito.
-
-The device source branch is named `17.0`, which is a plausible Android 17 target, but the branch name alone is not proof of compatibility with the selected LineageOS `lineage-24.0` manifest. BlueOS also applies patches during `source build/envsetup.sh`; every patch must apply successfully on the exact synced platform revisions.
+Upstream BlueOS targets LineageOS 24.0 / Android 17. Its main development device is Pixel 6a; that does not establish support for mojito. Device branch `17.0` is a plausible Android 17 target, but its name alone does not prove compatibility with the exact LineageOS platform manifest. Every BlueOS patch must apply on the synced revisions.
 
 ## Local manifests
 
 - [mojito-lineage24.xml](../manifests/mojito-lineage24.xml): five device-side repositories.
-- [blueos.xml](../manifests/blueos.xml): upstream BlueOS vendor tree.
+- [blueos.xml](../manifests/blueos.xml): upstream BlueOS.
+- [blueos-pinned.xml](../manifests/blueos-pinned.xml): corrected fallback pins for BlueOS 0.8.1 patch projects.
 
 ## Release blockers
 
-1. Finish auditing common device makefiles, vendor blob inventories and all project dependencies.
-2. Confirm the target LineageOS 24.0 platform branch is compatible with all five `17.0` repositories.
-3. Confirm every BlueOS patch applies; inspect all `BlueOS: FAILED` output.
-4. Run product configuration and a clean full build on a suitable Linux host.
-5. Inspect the output archive and calculate SHA-256.
-6. Boot-test the exact `mojito` hardware and validate radio, Wi-Fi, Bluetooth, camera, audio, sensors, fingerprint, charging, encryption and OTA.
+1. Validate the corrected fallback manifest with `repo sync` if it is needed.
+2. Audit vendor blob inventories and firmware compatibility.
+3. Confirm all five `17.0` repositories build against LineageOS 24.0.
+4. Run a clean full build and inspect the ZIP and SHA-256.
+5. Boot-test the exact hardware and validate radio, Wi-Fi, Bluetooth, camera, audio, sensors, fingerprint, charging, encryption and OTA.
 
-No release ZIP, boot image or recovery image is produced by this repository yet. No private signing keys or firmware images should be committed here.
+No release ZIP, boot image or recovery image is produced by this repository yet. Do not commit private signing keys or firmware images.
