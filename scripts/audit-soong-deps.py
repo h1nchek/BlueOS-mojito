@@ -46,7 +46,7 @@ def tokenize(text: str) -> list[str]:
         if kind == "string":
             # Decode only the common escaped quote/backslash forms.
             value = value[1:-1].replace(r'\"', '"').replace(r"\\", "\\")
-        tokens.append(value)
+        tokens.append("STR:" + value if kind == "string" else value)
     return tokens
 
 
@@ -95,8 +95,8 @@ def parse_modules(path: Path) -> list[Module]:
                 prop = token
                 value_index = cursor + 2
                 if prop == "name" and value_index < end:
-                    if len(tokens[value_index]) >= 2 and tokens[value_index].startswith('"'):
-                        name = tokens[value_index]
+                    if tokens[value_index].startswith("STR:"):
+                        name = tokens[value_index][4:]
                 if prop in DEPENDENCY_PROPERTIES and value_index < end and tokens[value_index] == "[":
                     array_depth = 0
                     values: list[str] = []
@@ -109,14 +109,8 @@ def parse_modules(path: Path) -> list[Module]:
                             array_depth -= 1
                             if array_depth == 0:
                                 break
-                        elif array_depth == 1 and current.startswith('"') is False and False:
-                            pass
-                        elif array_depth == 1 and current and current[0] not in "[]{}:,=":
-                            # Only quoted strings are module names; identifiers
-                            # and expressions are deliberately ignored.
-                            pass
-                        elif array_depth == 1 and current.startswith('"'):
-                            values.append(current)
+                        elif array_depth == 1 and current.startswith("STR:"):
+                            values.append(current[4:])
                         scan += 1
                     deps[prop] = values
                 cursor += 1
