@@ -1,5 +1,7 @@
 # Сборка BlueOS для Redmi Note 10 (mojito)
 
+Для краткой передачи проекта добровольному сборщику см. [Builder handoff](BUILDER_HANDOFF.md). Для правил внесения изменений см. [CONTRIBUTING.md](../CONTRIBUTING.md).
+
 ## Важно
 
 Это экспериментальный порт. Наличие device tree и vendor makefiles не означает, что устройство уже собирается. Успешной полной сборки и проверки загрузки на реальном Redmi Note 10 пока нет.
