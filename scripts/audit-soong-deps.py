@@ -91,10 +91,10 @@ def parse_modules(path: Path) -> list[Module]:
                 depth -= 1
                 cursor += 1
                 continue
-            if depth == 1 and cursor + 1 < end and tokens[cursor + 1] == ":":
+            if cursor + 1 < end and tokens[cursor + 1] == ":":
                 prop = token
                 value_index = cursor + 2
-                if prop == "name" and value_index < end:
+                if depth == 1 and prop == "name" and value_index < end:
                     if tokens[value_index].startswith("STR:"):
                         name = tokens[value_index][4:]
                 if prop in DEPENDENCY_PROPERTIES and value_index < end and tokens[value_index] == "[":
@@ -112,7 +112,7 @@ def parse_modules(path: Path) -> list[Module]:
                         elif array_depth == 1 and current.startswith("STR:"):
                             values.append(current[4:])
                         scan += 1
-                    deps[prop] = values
+                    deps.setdefault(prop, []).extend(values)
                 cursor += 1
                 continue
             cursor += 1
