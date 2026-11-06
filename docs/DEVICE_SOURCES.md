@@ -56,6 +56,10 @@ No kernel config changes are made from this source-only audit: changing memory a
 
 Upstream BlueOS targets LineageOS 24.0 / Android 17. Its main development device is Pixel 6a; that does not establish support for mojito. Device branch `17.0` is a plausible Android 17 target, but its name alone does not prove compatibility with the exact LineageOS platform manifest. Every BlueOS patch must apply on the synced revisions.
 
+### Corrected SM6150 device manifest ordering
+
+The inspected `device/xiaomi/sm6150-common/BoardConfigCommon.mk` appended the Qualcomm SM6150 C2 vendor manifest to `DEVICE_MANIFEST_FILE`, then reassigned that variable with `:=` to the common manifest path. The reassignment discarded the Qualcomm manifest. The build wrapper now runs `scripts/patch-mojito-device-tree.py` immediately after `repo sync`, moving the common manifest assignment before the Qualcomm append. The patch is idempotent and fails closed if the upstream file no longer matches either the known pre-patch or post-patch block. This fix is source-reviewed only; it still needs confirmation in the generated compatibility matrix during a real build.
+
 ### Vendor blob and kernel interface cross-check
 
 The two generated vendor copy manifests contain 348 device-specific and 107 SM6150-common proprietary source-path references (455 total). This is a count of references in the makefiles, not a verified count of files present. Representative blob paths were checked earlier, but the complete 455-path inventory has not yet been matched against the Git trees or a clean product build. The generated makefiles do not contain explicit `.ko` copy entries, module-load lists, or vendor_dlkm references in the inspected content.
