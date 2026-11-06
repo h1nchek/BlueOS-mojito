@@ -14,8 +14,10 @@ on:
     paths:
       - "scripts/audit-vendor-blobs.py"
       - "scripts/audit-vintf.py"
+      - "scripts/audit-soong-deps.py"
       - "tests/test_vendor_blob_audit.py"
       - "tests/test_vintf_audit.py"
+      - "tests/test_soong_audit.py"
       - ".github/workflows/vendor-audit-tool.yml"
 
 jobs:
