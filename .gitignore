@@ -1,25 +1,20 @@
-# Android / LineageOS build outputs
+# Android / LineageOS build outputs (workspace root)
 /out/
 /.repo/
-.repo/
-ccache/
-.cache/
-*.img
-*.img.gz
-*.zip
-*.ota
-*.target_files*.zip
-*.apk
-*.apex
-*.jar
-*.log
+/ccache/
+/.cache/
 
 # Local build configuration and credentials
 .env
 .env.*
 !.env.example
-*.local
 local.properties
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.orig
 
 # Editor and operating-system files
 .DS_Store
@@ -38,8 +33,3 @@ venv/
 .pytest_cache/
 .coverage
 htmlcov/
-
-# Temporary files
-*.tmp
-*.bak
-*.orig
