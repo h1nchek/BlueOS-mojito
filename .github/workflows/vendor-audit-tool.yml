@@ -5,8 +5,10 @@ on:
     paths:
       - "scripts/audit-vendor-blobs.py"
       - "scripts/audit-vintf.py"
+      - "scripts/audit-soong-deps.py"
       - "tests/test_vendor_blob_audit.py"
       - "tests/test_vintf_audit.py"
+      - "tests/test_soong_audit.py"
       - ".github/workflows/vendor-audit-tool.yml"
   pull_request:
     paths:
@@ -25,6 +27,6 @@ jobs:
         with:
           python-version: "3.x"
       - name: Compile audit utilities
-        run: python -m py_compile scripts/audit-vendor-blobs.py scripts/audit-vintf.py
+        run: python -m py_compile scripts/audit-vendor-blobs.py scripts/audit-vintf.py scripts/audit-soong-deps.py
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
