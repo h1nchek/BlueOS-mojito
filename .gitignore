@@ -33,3 +33,6 @@ venv/
 .pytest_cache/
 .coverage
 htmlcov/
+# Generated resolved Android manifests and build artifacts
+resolved-manifest-*.xml
+artifacts/
