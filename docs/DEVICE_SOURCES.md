@@ -112,3 +112,18 @@ The default mode reports dependencies not found in the supplied file set without
 ## Local repo manifest structural audit
 
 Run `python3 scripts/audit_repo_manifests.py manifests/*.xml` before syncing. The check detects duplicate project paths, missing revisions, undeclared remotes, and malformed `extend-project` entries. It does not check whether remote URLs or revisions are reachable; `repo sync` is still the source of truth.
+
+
+## Live branch resolution snapshot (2026-11-06)
+
+The GitHub branch API was queried for every repository referenced by `manifests/mojito-lineage24.xml`. All five remote `17.0` refs resolve successfully at the time of this check:
+
+| Repository | Resolved commit | Committer date | Commit subject |
+|---|---|---|---|
+| `device_xiaomi_mojito` | `efdf9962669b2f0dec80906e892a9b8d98dbe09b` | 2026-10-15 | Stop shipping 32-bit Zygote |
+| `device_xiaomi_sm6150-common` | `aae2067ea624cf86c10df3633725260920a19c87` | 2026-10-16 | Enable charging control bypass mode |
+| `android_kernel_xiaomi_mojito` | `87e3f1844a65ef9a1cb965fac6096a7dcd84f6ea` | 2026-10-23 | Hardcode compiler optimizations for sd678 |
+| `android_vendor_xiaomi_mojito` | `ef30fe68e01b50088093b56da82457202ab1dfe3` | 2026-02-08 | Patch libtinyxml2 to libtinyxml2-v34 |
+| `android_vendor_xiaomi_sm6150-common` | `b6f3a74a92888bb8f0f52144d89488ad6fa3fd54` | 2026-02-08 | Patch libtinyxml2 to libtinyxml2-v34 |
+
+This closes the narrow question of whether the five manifest branch names currently exist. It does **not** validate their cross-repository compatibility, prove that the revisions build together, or replace a successful `repo sync` and product build. The manifest intentionally tracks branch `17.0`, so future syncs may resolve to newer commits.
