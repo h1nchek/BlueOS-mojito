@@ -37,6 +37,21 @@ The local device manifest declares all five direct device, kernel and vendor rep
 
 Source inspection does not prove that all proprietary files referenced by generated vendor makefiles exist, that firmware matches, or that every Qualcomm CAF project resolves to a compatible revision. A clean sync and product build are still required.
 
+## Kernel integration audit
+
+The device tree selects `kernel/xiaomi/mojito`, `mojito_defconfig`, and Clang/LLVM flags (`LLVM=1`, `LLVM_IAS=1`). The common board config sets a 4 KiB page size, a separated DTBO, an appended DTB in the boot image, and boot header version 3 when virtual A/B is enabled (otherwise version 2). These settings are internally visible in the source tree, but the resulting boot/vendor_boot/DTBO images have not been built or checked against a real device.
+
+The selected kernel source identifies itself as Linux `4.14.357-openela`. The defconfig contains Android Binder IPC and BinderFS, SELinux, cgroups/cpusets, PSI, BPF, Clang LTO/CFI and Shadow Call Stack options. It also retains legacy Android memory interfaces (`CONFIG_ASHMEM` and `CONFIG_ION`); `CONFIG_MODULES` is disabled. This is a heavily backported legacy kernel configuration, not evidence of a GKI-compliant Android 17 kernel.
+
+Compatibility items requiring an actual platform build and device validation:
+
+- Confirm the exact LineageOS 24.0 kernel build rules and pinned Clang version can compile this 4.14 tree with its LTO/CFI settings. The presence of `LLVM=1` in BoardConfig is not a compiler compatibility test.
+- Check all device/vendor module expectations against `CONFIG_MODULES=n`; do not assume the module install steps produce required modules.
+- Validate the ION-based vendor graphics/camera stack and Android 17 userspace expectations. Do not enable DMA-BUF heaps or disable ION speculatively; the correct choice depends on the actual vendor HALs and userspace.
+- Build and inspect the generated kernel image, DTB/DTBO, boot and vendor_boot images, then boot-test. The source configuration alone cannot confirm correct packaging or bootability.
+
+No kernel config changes are made from this source-only audit: changing memory allocators, module support, or compiler hardening without build logs and device testing could make the device less bootable.
+ 
 ## Compatibility
 
 Upstream BlueOS targets LineageOS 24.0 / Android 17. Its main development device is Pixel 6a; that does not establish support for mojito. Device branch `17.0` is a plausible Android 17 target, but its name alone does not prove compatibility with the exact LineageOS platform manifest. Every BlueOS patch must apply on the synced revisions.
