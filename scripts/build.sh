@@ -34,13 +34,17 @@ fi
 echo "Syncing sources (stage: $BUILD_STAGE)..."
 repo sync -j"$JOBS" --fail-fast
 python3 "$ROOT/scripts/patch-mojito-device-tree.py"
+PRODUCT_INCLUDE='$(call inherit-product, vendor/blueos/config/blueos.mk)'
 if [[ "$BUILD_STAGE" == blueos ]]; then
   mkdir -p vendor/extra
-  PRODUCT_INCLUDE='$(call inherit-product, vendor/blueos/config/blueos.mk)'
   touch vendor/extra/product.mk
   grep -qxF "$PRODUCT_INCLUDE" vendor/extra/product.mk || echo "$PRODUCT_INCLUDE" >> vendor/extra/product.mk
   echo "Starting experimental BlueOS build for mojito..."
 else
+  if [[ -e vendor/blueos ]] || { [[ -f vendor/extra/product.mk ]] && grep -qxF "$PRODUCT_INCLUDE" vendor/extra/product.mk; }; then
+    echo "ERROR: this source directory contains stale BlueOS files. Use a fresh, separate directory for BUILD_STAGE=lineage." >&2
+    exit 1
+  fi
   echo "Starting clean LineageOS baseline build for mojito (BlueOS excluded)..."
 fi
 repo manifest -r -o "$ROOT/resolved-manifest-$BUILD_STAGE.xml"
