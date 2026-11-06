@@ -19,11 +19,15 @@ TOKEN_RE = re.compile(
     r"(?P<ident>[A-Za-z_][A-Za-z0-9_.-]*)|(?P<symbol>[^\s])"
 )
 DEPENDENCY_PROPERTIES = {
+    "defaults",
     "shared_libs",
     "static_libs",
     "whole_static_libs",
     "header_libs",
     "runtime_libs",
+    "jni_libs",
+    "uses_libs",
+    "optional_uses_libs",
     "required",
 }
 
