@@ -67,6 +67,18 @@ Exit codes: `0` = all parsed source paths exist and none are unresolved, `1` = o
 
 ---
 
+### VINTF XML preflight
+
+The new `scripts/audit-vintf.py` performs a conservative structural check on supplied Android VINTF XML files:
+
+```bash
+python3 scripts/audit-vintf.py \
+  device/xiaomi/sm6150-common/configs/manifests/manifest.xml \
+  hardware/qcom-caf/sm8150/media/conf_files/sm6150/c2_manifest_vendor.xml
+```
+
+It checks XML parsing, expected VINTF root elements, HAL entries without names, empty FQName values, and duplicate HAL instance declarations within each file. It does **not** resolve cross-file overrides, validate compatibility matrices, check service availability, or replace Android's `checkvintf` tool.
+
 ## Устройство / Device
 
 | Property | Value |
