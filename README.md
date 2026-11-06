@@ -35,6 +35,7 @@
 | SM6150 Codec2 vendor manifest ordering | Automatic guarded fix in build script / Автоматическое адресное исправление при сборке |
 | Proprietary vendor source files | 455 references inventoried; full existence check pending / 455 ссылок учтено, проверка файлов впереди |
 | Soong source preflight | Tool added; target-tree scan not run / Инструмент добавлен, проверка дерева не запускалась |
+| GitHub Actions ROM build | Manual workflow added; requires a configured self-hosted runner / Добавлен ручной workflow, нужен self-hosted runner |
 | ABI validation | Not run / Не выполнялась |
 | Full ROM build | Not run / Не выполнялась |
 | Boot and hardware tests | Not run / Не выполнялись |
@@ -133,7 +134,7 @@ See [docs/DEVICE_SOURCES.md](docs/DEVICE_SOURCES.md) for the source and compatib
 
 ## Сборка / Build
 
-A preliminary build wrapper is available at [scripts/build.sh](scripts/build.sh). It expects an x86_64 Linux host, the Android `repo` tool, and at least 350 GB of free SSD space. It has **not** been validated by a complete build in this project environment.
+A preliminary build wrapper is available at [scripts/build.sh](scripts/build.sh). A manual [GitHub Actions build workflow](.github/workflows/build-blueos-mojito.yml) can run it on a suitably provisioned self-hosted runner and upload the resulting ROM ZIP with SHA-256. It expects an x86_64 Linux host, the Android `repo` tool, and at least 350 GB of free SSD space. It has **not** been validated by a complete build in this project environment.
 
 Read [docs/BUILDING.md](docs/BUILDING.md) before using it. Build the plain LineageOS target first, then add BlueOS and inspect all patch output.
 
