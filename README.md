@@ -82,6 +82,10 @@ python3 scripts/audit-vintf.py \
 
 It checks XML parsing, expected VINTF root elements, HAL entries without names, empty FQName values, and duplicate HAL instance declarations within each file. It does **not** resolve cross-file overrides, validate compatibility matrices, check service availability, or replace Android's `checkvintf` tool.
 
+### Android repo manifest preflight
+
+Run `python3 scripts/audit_repo_manifests.py manifests/*.xml` to check local manifest XML for duplicate project paths, missing project revisions, undeclared remotes, and malformed `extend-project` entries. This is a structural check only; it does not prove that remote repositories or pinned revisions exist, and `repo sync` remains authoritative.
+
 ### Soong module dependency preflight
 
 A source-level Soong indexer is available as `scripts/audit-soong-deps.py`. Pass the `Android.bp` files you want to compare:
