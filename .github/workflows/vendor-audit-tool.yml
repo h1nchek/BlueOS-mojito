@@ -36,7 +36,23 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - name: Compile audit utilities
-        run: python -m py_compile scripts/audit-vendor-blobs.py scripts/audit-vintf.py scripts/audit-soong-deps.py scripts/patch-mojito-device-tree.py scripts/validate_ota_zip.py
+      - name: Compile Python utilities and tests
+        run: |
+          python -m py_compile scripts/*.py tests/*.py
+      - name: Check shell script syntax
+        run: bash -n scripts/build.sh
+      - name: Validate XML manifests
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          files = sorted(Path("manifests").glob("*.xml"))
+          if not files:
+              raise SystemExit("No XML manifests found")
+          for path in files:
+              ET.parse(path)
+              print(f"OK: {path}")
+          PY
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
