@@ -56,6 +56,16 @@ No kernel config changes are made from this source-only audit: changing memory a
 
 Upstream BlueOS targets LineageOS 24.0 / Android 17. Its main development device is Pixel 6a; that does not establish support for mojito. Device branch `17.0` is a plausible Android 17 target, but its name alone does not prove compatibility with the exact LineageOS platform manifest. Every BlueOS patch must apply on the synced revisions.
 
+### Vendor HAL and init-service inventory
+
+The common vendor product makefile explicitly installs Qualcomm implementations for Bluetooth audio, alarm, DSP, FM, Soter, BT config store, capability config, radio/IMS, data, and related services. Its proprietary copy list includes vendor init rc files for the alarm, capability-config-store, DSP, and Soter services. The common VINTF manifest advertises corresponding Qualcomm HIDL instances, as well as two SIM slots for several radio interfaces. This is a substantial legacy HIDL vendor surface that must be checked against the LineageOS 24.0 framework compatibility matrix and service binaries during a real build/boot.
+
+The device-specific and common VINTF manifests both declare Codec2 `android.hardware.media.c2@1.0`; the Qualcomm SM6150 C2 manifest additionally declares both `default` and `software` component-store instances. The device-tree correction described above is therefore important: dropping the Qualcomm C2 manifest can omit the software instance even though the common manifest still declares the default instance.
+
+The generated vendor `Android.bp` files declare many prebuilt shared libraries and their shared-library dependencies, including Qualcomm display mapper/allocator and camera provider dependencies. Source inspection cannot prove those dependency module names still exist in the target LineageOS branch, nor that the proprietary ELF objects link against its current platform ABI. Those checks require a full Soong graph and linker validation.
+
+The repository search did not find tracked `proprietary-files.txt`, `extract-files.sh`, `modules.load`, or explicit module-load declarations in the searched paths. This is not proof that no such files or module requirements exist elsewhere: GitHub code search is branch/index limited, and the full device tree was not available locally. The 455 proprietary copy references therefore remain unverified for complete file existence. A clean synced checkout should run a source-path existence audit and inspect all init rc files before treating the vendor set as complete.
+
 ### Corrected SM6150 device manifest ordering
 
 The inspected `device/xiaomi/sm6150-common/BoardConfigCommon.mk` appended the Qualcomm SM6150 C2 vendor manifest to `DEVICE_MANIFEST_FILE`, then reassigned that variable with `:=` to the common manifest path. The reassignment discarded the Qualcomm manifest. The build wrapper now runs `scripts/patch-mojito-device-tree.py` immediately after `repo sync`, moving the common manifest assignment before the Qualcomm append. The patch is idempotent and fails closed if the upstream file no longer matches either the known pre-patch or post-patch block. This fix is source-reviewed only; it still needs confirmation in the generated compatibility matrix during a real build.
