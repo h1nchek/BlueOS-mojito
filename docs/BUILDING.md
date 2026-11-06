@@ -47,6 +47,7 @@ BlueOS автоматически запускает `vendor/blueos/scripts/appl
 Если патчи не применяются на свежей LineageOS, можно временно закрепить только патчимые проекты на исходных ревизиях BlueOS 0.8.1:
 
 ```bash
+PORT_REPO="/path/to/BlueOS-mojito"  # каталог, где лежат manifests/ и scripts/
 cp "$PORT_REPO/manifests/blueos-pinned.xml" .repo/local_manifests/
 repo sync -j8 --force-sync
 source build/envsetup.sh
