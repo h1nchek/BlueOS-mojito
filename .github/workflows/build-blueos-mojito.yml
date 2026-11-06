@@ -70,7 +70,8 @@ jobs:
           set -euo pipefail
           product_dir="$ANDROID_DIR/out/target/product/mojito"
           [[ -d "$product_dir" ]] || { echo "Missing product output: $product_dir" >&2; exit 1; }
-          mapfile -d '' zips < <(find "$product_dir" -maxdepth 1 -type f -name '*.zip' -size +100M -print0)
+          # Exclude target-files archives: they are build inputs, not recovery-installable ROM packages.
+          mapfile -d '' zips < <(find "$product_dir" -maxdepth 1 -type f -name '*.zip' ! -iname '*target_files*' -size +100M -print0)
           if (( ${#zips[@]} == 0 )); then
             echo "ERROR: no ROM ZIP larger than 100 MiB was produced." >&2
             find "$product_dir" -maxdepth 1 -type f -printf '%f %s bytes\n' | sort
