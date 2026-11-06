@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       jobs:
-        description: "Parallel build jobs (0 = use all available CPU cores)"
+        description: "Parallel build jobs (0 = use safe default, up to 8)"
         required: false
-        default: "0"
+        default: "8"
         type: string
 
 permissions:
@@ -39,6 +39,7 @@ jobs:
           command -v git
           command -v python3
           command -v java
+          java -version
           mem_gib="$(awk '/MemTotal/ {print int($2/1024/1024)}' /proc/meminfo)"
           free_gib="$(df -BG "${RUNNER_TEMP}" | awk 'NR==2 {gsub(/G/,"",$4); print $4}')"
           echo "RAM: ${mem_gib} GiB; free workspace disk: ${free_gib} GiB"
@@ -57,10 +58,13 @@ jobs:
           JOBS_INPUT: ${{ inputs.jobs }}
         run: |
           set -euo pipefail
-          if [[ "${JOBS_INPUT:-0}" =~ ^[1-9][0-9]*$ ]]; then
+          if [[ "${JOBS_INPUT:-8}" == "0" || -z "${JOBS_INPUT:-}" ]]; then
+            export JOBS=8
+          elif [[ "${JOBS_INPUT}" =~ ^[1-9][0-9]*$ ]]; then
             export JOBS="$JOBS_INPUT"
           else
-            export JOBS="$(nproc)"
+            echo "ERROR: jobs must be 0 or a positive integer." >&2
+            exit 1
           fi
           ./scripts/build.sh "$ANDROID_DIR" 2>&1 | tee "$GITHUB_WORKSPACE/build.log"
 
