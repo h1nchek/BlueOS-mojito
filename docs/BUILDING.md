@@ -11,6 +11,7 @@ Upstream BlueOS рекомендует Linux x86_64 (Ubuntu 22.04/24.04 или W
 Ниже `ROOT` — путь к клону этого репозитория `BlueOS-mojito`. Из корня клона этого репозитория:
 
 ```bash
+ROOT="/path/to/BlueOS-mojito"
 mkdir -p .repo/local_manifests
 cp manifests/mojito-lineage24.xml .repo/local_manifests/
 cp manifests/blueos.xml .repo/local_manifests/
