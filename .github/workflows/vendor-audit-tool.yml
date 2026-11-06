@@ -1,41 +1,21 @@
 name: Vendor audit utility
-
 on:
   push:
     paths:
-      - "scripts/audit-vendor-blobs.py"
-      - "scripts/audit-vintf.py"
-      - "scripts/audit-soong-deps.py"
-      - "scripts/patch-mojito-device-tree.py"
-      - "scripts/validate_ota_zip.py"
-      - "scripts/audit_repo_manifests.py"
-      - "scripts/build.sh"
-      - ".github/workflows/build-blueos-mojito.yml"
+      - "scripts/**"
+      - ".github/workflows/**"
       - "manifests/*.xml"
-      - "tests/test_vendor_blob_audit.py"
-      - "tests/test_vintf_audit.py"
-      - "tests/test_soong_audit.py"
-      - "tests/test_device_tree_patch.py"
-      - "tests/test_validate_ota_zip.py"
-      - "tests/test_repo_manifest_audit.py"
-      - ".github/workflows/vendor-audit-tool.yml"
+      - "tests/**"
+      - "README.md"
+      - "docs/**"
   pull_request:
     paths:
-      - "scripts/audit-vendor-blobs.py"
-      - "scripts/audit-vintf.py"
-      - "scripts/audit-soong-deps.py"
-      - "scripts/patch-mojito-device-tree.py"
-      - "scripts/validate_ota_zip.py"
-      - "scripts/audit_repo_manifests.py"
+      - "scripts/**"
+      - ".github/workflows/**"
       - "manifests/*.xml"
-      - "tests/test_vendor_blob_audit.py"
-      - "tests/test_vintf_audit.py"
-      - "tests/test_soong_audit.py"
-      - "tests/test_device_tree_patch.py"
-      - "tests/test_validate_ota_zip.py"
-      - "tests/test_repo_manifest_audit.py"
-      - ".github/workflows/vendor-audit-tool.yml"
-
+      - "tests/**"
+      - "README.md"
+      - "docs/**"
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -45,8 +25,7 @@ jobs:
         with:
           python-version: "3.x"
       - name: Compile Python utilities and tests
-        run: |
-          python -m py_compile scripts/*.py tests/*.py
+        run: python -m py_compile scripts/*.py tests/*.py
       - name: Check shell script syntax
         run: bash -n scripts/build.sh
       - name: Validate XML manifests
@@ -54,7 +33,6 @@ jobs:
           python - <<'PY'
           import xml.etree.ElementTree as ET
           from pathlib import Path
-
           files = sorted(Path("manifests").glob("*.xml"))
           if not files:
               raise SystemExit("No XML manifests found")
