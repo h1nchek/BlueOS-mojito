@@ -79,6 +79,22 @@ python3 scripts/audit-vintf.py \
 
 It checks XML parsing, expected VINTF root elements, HAL entries without names, empty FQName values, and duplicate HAL instance declarations within each file. It does **not** resolve cross-file overrides, validate compatibility matrices, check service availability, or replace Android's `checkvintf` tool.
 
+### Soong module dependency preflight
+
+A source-level Soong indexer is available as `scripts/audit-soong-deps.py`. Pass the `Android.bp` files you want to compare:
+
+```bash
+python3 scripts/audit-soong-deps.py --strict \
+  vendor/xiaomi/mojito/Android.bp \
+  vendor/xiaomi/sm6150-common/Android.bp \
+  hardware/qcom-caf/sm8150/display/Android.bp \
+  vendor/qcom/opensource/display/Android.bp
+```
+
+It indexes named module blocks and compares literal entries in `shared_libs`, `static_libs`, `whole_static_libs`, `header_libs`, `runtime_libs`, and `required`. Without `--strict`, names absent from the supplied files are reported as unindexed but do not fail the command; with `--strict`, they return status 1.
+
+**Important:** Soong dependencies can be valid in other files, namespaces, or external projects. This lightweight text scan does not evaluate Blueprint expressions, defaults, visibility, architecture variants, ABI compatibility, or the final Soong graph. Treat unindexed names as follow-up leads, not confirmed build errors. A real synced build and Soong analysis remain authoritative.
+
 ## Устройство / Device
 
 | Property | Value |
