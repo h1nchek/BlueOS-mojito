@@ -12,9 +12,9 @@
 
 </div>
 
-> **RU:** Это экспериментальный порт BlueOS для Xiaomi Redmi Note 10 4G. Сейчас ведётся интеграция исходников и проверка совместимости. Готовой прошивки для установки пока нет.
+> **RU:** Это независимый порт BlueOS для Xiaomi Redmi Note 10 4G. Основная подготовительная работа с исходниками, манифестами, интеграцией и инструментами проверки выполнена. Проект подготовлен к первой полноценной сборке; готовой прошивки для установки пока нет.
 >
-> **EN:** This is an experimental BlueOS bring-up for the Xiaomi Redmi Note 10 4G. Source integration and compatibility work are in progress. There is no installable ROM build yet.
+> **EN:** This is an independent BlueOS porting effort for the Xiaomi Redmi Note 10 4G. The source mapping, manifests, integration glue, and preflight tooling are prepared for the first full build. No installable ROM build is available yet.
 
 ---
 
@@ -30,19 +30,19 @@
 
 | Направление / Area | Статус / Status |
 |---|---|
-| Device, common, kernel and vendor source mapping | Reviewed / Изучено |
+| Device, common, kernel and vendor source mapping | Reviewed and pinned / Проверено и закреплено |
 | LineageOS 24.0 + Qualcomm CAF dependency mapping | Reviewed / Изучено |
 | SM6150 Codec2 vendor manifest ordering | Automatic guarded fix in build script / Автоматическое адресное исправление при сборке |
-| Proprietary vendor source files | 455/455 source paths present in current vendor trees / Все 455 путей найдены в текущих vendor-деревьях |
+| Proprietary vendor source files | 455/455 referenced paths found in reviewed vendor repositories; re-audit after sync / 455/455 путей найдены в проверенных vendor-репозиториях; повторная проверка после sync |
 | Soong source preflight | Tool added; target-tree scan not run / Инструмент добавлен, проверка дерева не запускалась |
-| Free GitHub Actions preflight | Passed: Python compilation, shell syntax, XML manifests, 29 unit tests / Пройдено: Python, shell, XML и 29 тестов |
-| Full GitHub Actions ROM build | Not run: requires a provisioned Linux runner with large SSD/RAM / Не запускалась: нужен мощный Linux runner |
+| GitHub Actions preflight | Latest main run #36 passed: Python compilation, shell syntax, XML manifests and unit tests / Последний запуск main #36 успешен: Python, shell, XML и unit-тесты |
+| Full GitHub Actions ROM build | Waiting for a provisioned Linux build host / Ожидает подготовленного Linux-сервера для сборки |
 | ABI validation | Not run / Не выполнялась |
-| Full ROM build | Not run / Не выполнялась |
-| Boot and hardware tests | Not run / Не выполнялись |
-| Flashable ZIP | Not available / Отсутствует |
+| Full ROM build | Pending first builder run / Ожидает первой сборки |
+| Boot and hardware tests | Pending a successful build and device testing / После успешной сборки и проверки на устройстве |
+| Flashable ZIP | Pending build / Появится после сборки |
 
-**Важно / Important:** source-level review does not prove that the ROM builds or boots. No claim of working camera, display, radio, Wi-Fi, fingerprint, audio, or other hardware is made until tested on the actual device.
+**Важно / Important:** подготовка исходников и успешные preflight-проверки ещё не подтверждают успешную компиляцию или загрузку. Совместимость камеры, дисплея, связи, Wi-Fi, отпечатка, аудио и остальных компонентов будет подтверждаться только после тестирования на реальном устройстве.
 
 ---
 
@@ -129,19 +129,18 @@ See [docs/DEVICE_SOURCES.md](docs/DEVICE_SOURCES.md) for the source and compatib
 
 ## План работ / Roadmap
 
-1. Repeat the vendor source-path audit after `repo sync`, then verify blob checksums, ELF dependencies, firmware compatibility, and ABI.
-2. Run the Soong source preflight across device/vendor/CAF trees, then resolve actual dependency errors against the pinned LineageOS 24.0 revision.
-3. Validate VINTF declarations and vendor service compatibility.
-4. Build plain LineageOS for `mojito` before applying the BlueOS layer.
-5. Integrate BlueOS and resolve patch failures.
-6. Inspect boot/vendor_boot/DTB/DTBO packaging and verify the resulting ZIP.
-7. Test boot and core hardware functions on a physical Redmi Note 10, then publish logs and checksums.
+1. Run the prepared build pipeline on a suitable Linux host, starting with a clean LineageOS 24.0 build for `mojito`.
+2. Repeat the vendor source-path audit after `repo sync`; investigate checksums, ELF dependencies, firmware compatibility, and ABI where applicable.
+3. Run the Soong and VINTF checks against the fully synced source tree and fix any real build-time issues.
+4. Enable the BlueOS layer, resolve patch/application or compilation errors, and produce the first candidate ZIP.
+5. Inspect boot/vendor_boot/DTB/DTBO packaging and validate the ZIP and SHA-256 checksum.
+6. Test boot and core hardware functions on a physical Redmi Note 10, then publish logs, known issues, and checksums.
 
 ## Сборка / Build
 
-A preliminary build wrapper is available at [scripts/build.sh](scripts/build.sh). A free GitHub Actions preflight workflow checks Python syntax, shell syntax, XML manifests, and the unit test suite. The latest run passed all 29 tests. A separate manual [GitHub Actions build workflow](.github/workflows/build-blueos-mojito.yml) can run the full ROM build only on a suitably provisioned self-hosted runner and upload the resulting ROM ZIP with SHA-256. It expects an x86_64 Linux host, the Android `repo` tool, and at least 350 GB of free SSD space. It has **not** been validated by a complete build in this project environment.
+The repository now contains a two-stage build wrapper at [scripts/build.sh](scripts/build.sh): clean LineageOS first, then the BlueOS integration. The latest GitHub Actions preflight on `main` (run #36) completed successfully, including Python compilation, shell syntax, XML manifest validation, and unit tests. This is a static/preflight check, **not** a full Android ROM build.
 
-Read [docs/BUILDING.md](docs/BUILDING.md) before using it. Build the plain LineageOS target first, then add BlueOS and inspect all patch output.
+The manual [GitHub Actions build workflow](.github/workflows/build-blueos-mojito.yml) requires a provisioned self-hosted runner: x86_64 Linux, the Android `repo` tool, at least 32 GB RAM, and 350 GB of free SSD space. The first full build is the next project milestone. See [docs/BUILDING.md](docs/BUILDING.md) for the build procedure and [docs/BUILDER_HANDOFF.md](docs/BUILDER_HANDOFF.md) for a concise handoff to a volunteer builder. Contribution and safety guidance is in [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
 ## Безопасность / Safety
 
