@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- BlueOS 0.8.1 patch baseline. Use only if apply-patches.sh reports failures. -->
+<manifest>
+  <extend-project path="frameworks/base" revision="37c5d17bec80020b8dbfb0a0d39b4ba93b2b6efd" />
+  <extend-project path="packages/apps/Settings" revision="653be4a9d2b0c727136694c789975e27fa7cdcef" />
+  <extend-project path="packages/apps/LineageParts" revision="0e181d3d5dd8456ee158d9ac8725d9cd59fecd28" />
+  <extend-project path="packages/apps/SetupWizard" revision="85cde5712f2f3eb6a0ffa9d6951ec4a83734586e" />
+  <extend-project path="packages/apps/ThemePicker" revision="8173ec802ed046d1670ec03962e686e393a85335" />
+  <extend-project path="packages/apps/DeskClock" revision="89b473594ec8ad01417624e670912450ce5df7e9" />
+  <extend-project path="packages/apps/Etar" revision="5f26fe66475643ec08fe71a4021946aa57307192" />
+  <extend-project path="packages/apps/Glimpse" revision="fdcb4ba35d92eefbdcca96580fb9e8ac8901ed60" />
+  <extend-project path="packages/apps/Launcher3" revision="0b97deb37dcba757a3130899273fb4c298702f00" />
+  <extend-project path="bootable/recovery" revision="69174527a30bc72a28a5d55acdec8ce5edaba9e0" />
+  <extend-project path="vendor/lineage" revision="2a9e5764da4484cb889508a489ffed694912cbe1" />
+  <extend-project path="frameworks/libs/systemui" revision="08c3f6db7201e66f3006a1f2742dff929060c995" />
+</manifest>
