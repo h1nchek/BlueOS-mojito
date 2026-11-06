@@ -1,0 +1,45 @@
+# Android / LineageOS build outputs
+/out/
+/.repo/
+.repo/
+ccache/
+.cache/
+*.img
+*.img.gz
+*.zip
+*.ota
+*.target_files*.zip
+*.apk
+*.apex
+*.jar
+*.log
+
+# Local build configuration and credentials
+.env
+.env.*
+!.env.example
+*.local
+local.properties
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
