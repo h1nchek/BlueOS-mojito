@@ -6,39 +6,47 @@
 
 Upstream BlueOS рекомендует Linux x86_64 (Ubuntu 22.04/24.04 или WSL2), 32 ГБ ОЗУ и около 350 ГБ свободного SSD.
 
-## Исходники
+## Исходники и базовая LineageOS
 
-Ниже `ROOT` — путь к клону этого репозитория `BlueOS-mojito`. Из корня клона этого репозитория:
+Ниже `ROOT` — путь к клону этого репозитория `BlueOS-mojito`. Сначала синхронизируй **только** device manifest, чтобы получить чистую LineageOS без BlueOS:
 
 ```bash
 ROOT="/path/to/BlueOS-mojito"
 mkdir -p .repo/local_manifests
-cp manifests/mojito-lineage24.xml .repo/local_manifests/
-cp manifests/blueos.xml .repo/local_manifests/
-```
-
-Инициализировать LineageOS 24.0:
-
-```bash
+cp "$ROOT/manifests/mojito-lineage24.xml" .repo/local_manifests/
 repo init -u https://github.com/LineageOS/android.git -b lineage-24.0 --git-lfs --no-clone-bundle
 repo sync -j8
-
-# From the Android source root; ROOT points to the BlueOS-mojito clone.
 python3 "$ROOT/scripts/patch-mojito-device-tree.py"
 ```
 
-Сначала нужно получить чистую сборку LineageOS для `mojito`. Ветка устройства `17.0` сама по себе ещё не доказывает совместимость с каждым проектом LineageOS 24.0.
+Ветка устройства `17.0` сама по себе ещё не доказывает совместимость с каждым проектом LineageOS 24.0. Сначала попробуй собрать базовый продукт:
+
+```bash
+source build/envsetup.sh
+breakfast mojito
+m bacon -j"$(nproc)"
+```
+
+Если чистая LineageOS не собирается, сначала исправь ошибки device/vendor/kernel-интеграции. Не переходи к BlueOS, пока базовая сборка не проходит.
 
 ## Подключение BlueOS
 
-Из корня Android-исходников:
+После успешной базовой сборки добавь upstream BlueOS manifest и синхронизируй его проекты:
+
+```bash
+cp "$ROOT/manifests/blueos.xml" .repo/local_manifests/
+repo sync -j8
+python3 "$ROOT/scripts/patch-mojito-device-tree.py"
+```
+
+Из корня Android-исходников подключи BlueOS к продукту:
 
 ```bash
 mkdir -p vendor/extra
 grep -qxF '$(call inherit-product, vendor/blueos/config/blueos.mk)' vendor/extra/product.mk 2>/dev/null || echo '$(call inherit-product, vendor/blueos/config/blueos.mk)' >> vendor/extra/product.mk
 ```
 
-## Сборка
+## Сборка BlueOS
 
 ```bash
 source build/envsetup.sh
