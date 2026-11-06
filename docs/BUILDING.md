@@ -27,7 +27,7 @@ breakfast mojito
 m bacon -j8
 ```
 
-The wrapper defaults to at most 8 parallel jobs to limit memory pressure. Increase the job count only if the build host has sufficient RAM.
+The wrapper defaults to at most 8 parallel jobs to limit memory pressure. The documented commands use `-j8`; lower this value on hosts with less RAM.
 
 Если чистая LineageOS не собирается, сначала исправь ошибки device/vendor/kernel-интеграции. Не переходи к BlueOS, пока базовая сборка не проходит.
 
@@ -53,7 +53,7 @@ grep -qxF '$(call inherit-product, vendor/blueos/config/blueos.mk)' vendor/extra
 ```bash
 source build/envsetup.sh
 breakfast mojito
-m bacon -j"$(nproc)"
+m bacon -j8
 ```
 
 BlueOS автоматически запускает `vendor/blueos/scripts/apply-patches.sh` при загрузке окружения. Скрипт возвращает ненулевой код, если хотя бы один патч не применился; не игнорируйте `BlueOS: FAILED`.
