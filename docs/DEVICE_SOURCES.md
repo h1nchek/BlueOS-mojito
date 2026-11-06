@@ -56,3 +56,15 @@ Upstream BlueOS targets LineageOS 24.0 / Android 17. Its main development device
 5. Boot-test the exact hardware and validate radio, Wi-Fi, Bluetooth, camera, audio, sensors, fingerprint, charging, encryption and OTA.
 
 No release ZIP, boot image or recovery image is produced by this repository yet. Do not commit private signing keys or firmware images.
+
+
+### LineageOS 24.0 / Qualcomm CAF dependency cross-check
+
+The device and common trees do not contain `lineage.dependencies`; their external build dependencies are declared through Soong namespace imports, product makefiles, and BoardConfig references. Cross-checking those paths against the LineageOS 24.0 manifest snippet confirms that the standard source manifest supplies the relevant projects:
+
+- `hardware/google/interfaces`, `hardware/google/pixel`, and `hardware/lineage/interfaces` are standard LineageOS projects.
+- `hardware/qcom-caf/common` supplies the common CAF namespace, including the `libqti-perfd-client` subdirectory, and the common manifest linkfiles.
+- `hardware/qcom-caf/sm8150/audio`, `display`, and `media` are declared against the `lineage-24.0-caf-sm8150` branches.
+- `hardware/qcom-caf/wlan` is declared by the LineageOS manifest on its CAF branch.
+
+The corresponding LineageOS repositories expose the expected `lineage-24.0` / `lineage-24.0-caf-sm8150` branches. This confirms the manifest-level project mapping, not successful compilation or compatibility of every module. The common tree's references to SM8150 audio configuration files and the SM6150 C2 manifest still need to be tested in an actual sync/build.
