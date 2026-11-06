@@ -36,6 +36,20 @@ class VintfAuditTests(unittest.TestCase):
             errors, _ = MODULE.audit(path)
             self.assertTrue(any("duplicate HAL instance" in item for item in errors))
 
+    def test_grouped_legacy_hal_names_are_not_misclassified(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "manifest.xml"
+            path.write_text(
+                '<manifest><hal><name>android.hardware.sensors</name>'
+                '<name>android.frameworks.sensorservice</name>'
+                '<fqname>@1.0::ISensors/default</fqname>'
+                '<fqname>@1.0::ISensorManager/default</fqname>'
+                '</hal></manifest>'
+            )
+            errors, count = MODULE.audit(path)
+            self.assertEqual(errors, [])
+            self.assertEqual(count, 1)
+
     def test_malformed_xml_is_reported(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "broken.xml"
