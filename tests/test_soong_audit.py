@@ -48,7 +48,7 @@ class SoongAuditTests(unittest.TestCase):
             modules = MODULE.parse_modules(path)
             self.assertEqual(len(modules), 1)
             self.assertEqual(modules[0].name, "real")
-            self.assertEqual(modules[0].dependencies["shared_libs"], ["actual"])
+            self.assertEqual(modules[0].dependencies["shared_libs"], ["nested", "actual"])
 
     def test_cli_strict_returns_one_for_unindexed_dependency(self):
         with tempfile.TemporaryDirectory() as tmp:
