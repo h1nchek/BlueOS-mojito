@@ -68,3 +68,14 @@ The device and common trees do not contain `lineage.dependencies`; their externa
 - `hardware/qcom-caf/wlan` is declared by the LineageOS manifest on its CAF branch.
 
 The corresponding LineageOS repositories expose the expected `lineage-24.0` / `lineage-24.0-caf-sm8150` branches. This confirms the manifest-level project mapping, not successful compilation or compatibility of every module. The common tree's references to SM8150 audio configuration files and the SM6150 C2 manifest still need to be tested in an actual sync/build.
+
+
+## VINTF XML preflight utility
+
+A repository-side XML preflight helper is available:
+
+```bash
+python3 scripts/audit-vintf.py path/to/manifest.xml path/to/compatibility_matrix.xml
+```
+
+It verifies XML well-formedness, accepted VINTF root tags, non-empty HAL names/FQNames, and duplicate exact HAL instance declarations inside each input file. It is intentionally conservative: duplicate declarations across separate files, framework/vendor matching, target-level compatibility, service registration, and runtime behavior require the Android build tools (especially `checkvintf`) in a complete synced tree.
