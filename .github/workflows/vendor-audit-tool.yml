@@ -9,6 +9,8 @@ on:
       - "scripts/patch-mojito-device-tree.py"
       - "scripts/validate_ota_zip.py"
       - "scripts/audit_repo_manifests.py"
+      - "scripts/build.sh"
+      - ".github/workflows/build-blueos-mojito.yml"
       - "manifests/*.xml"
       - "tests/test_vendor_blob_audit.py"
       - "tests/test_vintf_audit.py"
