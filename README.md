@@ -34,7 +34,8 @@
 | LineageOS 24.0 + Qualcomm CAF dependency mapping | Reviewed / Изучено |
 | SM6150 Codec2 vendor manifest ordering | Fix prepared in bring-up branch / Исправление в рабочей ветке |
 | Proprietary vendor source files | 455 references inventoried; full existence check pending / 455 ссылок учтено, проверка файлов впереди |
-| Soong + ABI validation | Not run / Не выполнялась |
+| Soong source preflight | Tool added; target-tree scan not run / Инструмент добавлен, проверка дерева не запускалась |
+| ABI validation | Not run / Не выполнялась |
 | Full ROM build | Not run / Не выполнялась |
 | Boot and hardware tests | Not run / Не выполнялись |
 | Flashable ZIP | Not available / Отсутствует |
@@ -123,7 +124,7 @@ See [docs/DEVICE_SOURCES.md](docs/DEVICE_SOURCES.md) for the source and compatib
 ## План работ / Roadmap
 
 1. Finish the proprietary-file existence audit in a complete synced checkout.
-2. Resolve Soong module and shared-library dependency errors against the pinned LineageOS 24.0 revision.
+2. Run the Soong source preflight across device/vendor/CAF trees, then resolve actual dependency errors against the pinned LineageOS 24.0 revision.
 3. Validate VINTF declarations and vendor service compatibility.
 4. Build plain LineageOS for `mojito` before applying the BlueOS layer.
 5. Integrate BlueOS and resolve patch failures.
