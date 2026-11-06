@@ -54,6 +54,24 @@ class SoongAuditTests(unittest.TestCase):
             self.assertEqual(modules[0].name, "real")
             self.assertEqual(modules[0].dependencies["shared_libs"], ["nested", "actual"])
 
+    def test_unterminated_module_block_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "Android.bp"
+            path.write_text('cc_library { name: "libalpha", shared_libs: ["libbeta"]')
+            with self.assertRaisesRegex(ValueError, "unterminated block"):
+                MODULE.parse_modules(path)
+
+    def test_cli_returns_two_for_malformed_android_bp(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "Android.bp"
+            path.write_text('cc_library { name: "libalpha"')
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT), str(path)],
+                capture_output=True, text=True, check=False,
+            )
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("ERROR malformed Android.bp", result.stderr)
+
     def test_cli_strict_returns_one_for_unindexed_dependency(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "Android.bp"
