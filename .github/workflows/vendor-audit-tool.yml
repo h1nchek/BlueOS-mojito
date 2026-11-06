@@ -7,10 +7,12 @@ on:
       - "scripts/audit-vintf.py"
       - "scripts/audit-soong-deps.py"
       - "scripts/patch-mojito-device-tree.py"
+      - "scripts/validate_ota_zip.py"
       - "tests/test_vendor_blob_audit.py"
       - "tests/test_vintf_audit.py"
       - "tests/test_soong_audit.py"
       - "tests/test_device_tree_patch.py"
+      - "tests/test_validate_ota_zip.py"
       - ".github/workflows/vendor-audit-tool.yml"
   pull_request:
     paths:
@@ -33,6 +35,6 @@ jobs:
         with:
           python-version: "3.x"
       - name: Compile audit utilities
-        run: python -m py_compile scripts/audit-vendor-blobs.py scripts/audit-vintf.py scripts/audit-soong-deps.py scripts/patch-mojito-device-tree.py
+        run: python -m py_compile scripts/audit-vendor-blobs.py scripts/audit-vintf.py scripts/audit-soong-deps.py scripts/patch-mojito-device-tree.py scripts/validate_ota_zip.py
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
