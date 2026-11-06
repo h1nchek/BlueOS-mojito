@@ -85,6 +85,7 @@ A source-level Soong indexer is available as `scripts/audit-soong-deps.py`. Pass
 
 ```bash
 python3 scripts/audit-soong-deps.py --strict \
+  device/xiaomi/sm6150-common/Android.bp \
   vendor/xiaomi/mojito/Android.bp \
   vendor/xiaomi/sm6150-common/Android.bp \
   hardware/qcom-caf/sm8150/display/Android.bp \
