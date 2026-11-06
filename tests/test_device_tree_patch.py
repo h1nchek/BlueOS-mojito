@@ -1,5 +1,3 @@
-import importlib.util
-import os
 import subprocess
 import sys
 import tempfile
