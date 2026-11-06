@@ -32,7 +32,7 @@
 |---|---|
 | Device, common, kernel and vendor source mapping | Reviewed / Изучено |
 | LineageOS 24.0 + Qualcomm CAF dependency mapping | Reviewed / Изучено |
-| SM6150 Codec2 vendor manifest ordering | Fix prepared in bring-up branch / Исправление в рабочей ветке |
+| SM6150 Codec2 vendor manifest ordering | Automatic guarded fix in build script / Автоматическое адресное исправление при сборке |
 | Proprietary vendor source files | 455 references inventoried; full existence check pending / 455 ссылок учтено, проверка файлов впереди |
 | Soong source preflight | Tool added; target-tree scan not run / Инструмент добавлен, проверка дерева не запускалась |
 | ABI validation | Not run / Не выполнялась |
