@@ -64,10 +64,10 @@ jobs:
           set -euo pipefail
           if [[ "${JOBS_INPUT:-8}" == "0" || -z "${JOBS_INPUT:-}" ]]; then
             export JOBS=8
-          elif [[ "${JOBS_INPUT}" =~ ^[1-9][0-9]*$ ]]; then
+          elif [[ "${JOBS_INPUT}" =~ ^[1-9][0-9]*$ ]] && (( JOBS_INPUT <= 8 )); then
             export JOBS="$JOBS_INPUT"
           else
-            echo "ERROR: jobs must be 0 or a positive integer." >&2
+            echo "ERROR: jobs must be 0 or an integer from 1 to 8." >&2
             exit 1
           fi
           ./scripts/build.sh "$ANDROID_DIR" 2>&1 | tee "$GITHUB_WORKSPACE/build.log"
