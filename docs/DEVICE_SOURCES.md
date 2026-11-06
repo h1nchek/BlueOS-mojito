@@ -25,6 +25,10 @@ All five repositories expose branch `17.0`:
 - `sm6150.mk` inherits `vendor/xiaomi/sm6150-common/sm6150-common-vendor.mk` and references Qualcomm CAF common and SM8150 audio projects.
 - The common and device vendor makefiles contain large generated `PRODUCT_COPY_FILES` lists under their respective `proprietary/` trees. Spot checks confirmed representative files are present in GitHub: common `gps.conf` and `libqmi_cci.so`; device `a615_zap.elf` and `com.qti.tuned.default.bin`. Binary blobs were fetched successfully in base64 mode. These checks prove only those sample paths exist; they do not prove complete coverage of every makefile reference. No root-level `proprietary-files.txt`, `extract-files.sh`, or `setup-makefiles.sh` was found at the checked paths, so a full automated inventory comparison is still unavailable.
 
+## SM6150 VINTF manifest ordering fix
+
+The current `17.0` common device tree assigns the common manifest after appending the Qualcomm SM6150 Codec2 vendor manifest. Because `:=` replaces the variable, the Qualcomm manifest would be dropped. `scripts/patch-mojito-device-tree.py` now applies a guarded, idempotent reorder immediately after `repo sync` in `scripts/build.sh`. It changes only the exact known three-line sequence and aborts if the source differs or is ambiguous. Three unit tests cover the transformation, idempotence, and refusal of an unknown source. This has not yet been run against a complete synced Android checkout.
+
 ## BlueOS patch integration
 
 Upstream `vendorsetup.sh` runs `scripts/apply-patches.sh` when `build/envsetup.sh` is sourced. The patch script exits nonzero if any patch fails, so the build script's `set -e` should stop at that stage rather than silently producing a non-BlueOS build.
