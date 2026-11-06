@@ -23,12 +23,13 @@ All five repositories expose branch `17.0`:
 - `BoardConfig.mk` selects `kernel/xiaomi/mojito` and `mojito_defconfig`, asserts `mojito,sunny`, and includes common and device vendor board configs.
 - `BoardConfigCommon.mk` includes `vendor/xiaomi/sm6150-common/BoardConfigVendor.mk`.
 - `sm6150.mk` inherits `vendor/xiaomi/sm6150-common/sm6150-common-vendor.mk` and references Qualcomm CAF common and SM8150 audio projects.
+- The inspected common vendor makefile contains a substantial `PRODUCT_COPY_FILES` list under its `proprietary/` tree. File-by-file blob coverage and firmware matching have not yet been established.
 
 ## BlueOS patch integration
 
 Upstream `vendorsetup.sh` runs `scripts/apply-patches.sh` when `build/envsetup.sh` is sourced. The patch script exits nonzero if any patch fails, so the build script's `set -e` should stop at that stage rather than silently producing a non-BlueOS build.
 
-Upstream `manifests/blueos-pinned.xml` currently contains 12 `extend-project` entries with empty `name` values. That is not a usable project selector. This repository now carries a corrected local manifest, `manifests/blueos-pinned.xml`, using the 12 project paths in the same order as upstream `scripts/export-patches.sh`. It should only be used if fresh-branch patch application fails. The revision-to-path mapping is inferred from the matching ordered upstream lists and still needs validation by an actual `repo sync`.
+Upstream `manifests/blueos-pinned.xml` currently contains 12 `extend-project` entries with empty `name` values. That is not a usable project selector. This repository carries a corrected local fallback at `manifests/blueos-pinned.xml`. Its 12 revisions have now been matched to their actual LineageOS project paths by resolving the commit SHAs against the corresponding GitHub project repositories. The earlier draft had several revisions assigned to the wrong paths; the mapping has been corrected. The manifest still needs an actual `repo sync` test in a complete LineageOS checkout before it can be treated as build-validated. Use it only if fresh-branch patch application fails.
 
 ## Manifest coverage and unresolved dependencies
 
