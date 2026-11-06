@@ -4,7 +4,14 @@ set -Eeuo pipefail
 # Build sources only; this script does not flash a phone.
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ANDROID_DIR="${1:-$HOME/android/blueos-mojito}"
-JOBS="${JOBS:-$(nproc)}"
+# Avoid exhausting RAM by default on high-core-count build hosts.
+DEFAULT_JOBS="$(nproc)"
+if (( DEFAULT_JOBS > 8 )); then DEFAULT_JOBS=8; fi
+JOBS="${JOBS:-$DEFAULT_JOBS}"
+if [[ ! "$JOBS" =~ ^[1-9][0-9]*$ ]]; then
+  echo "ERROR: JOBS must be a positive integer; got: $JOBS" >&2
+  exit 1
+fi
 
 if [[ "$(uname -s)" != "Linux" ]]; then
   echo "ERROR: use a Linux x86_64 build host." >&2
@@ -33,7 +40,7 @@ cp "$ROOT/manifests/mojito-lineage24.xml" .repo/local_manifests/
 cp "$ROOT/manifests/blueos.xml" .repo/local_manifests/
 
 echo "Syncing LineageOS, BlueOS and mojito device sources..."
-repo sync -j"$JOBS"
+repo sync -j"$JOBS" --fail-fast
 
 # Keep the common and Qualcomm SM6150 Codec2 vendor manifests in the product.
 python3 "$ROOT/scripts/patch-mojito-device-tree.py"
