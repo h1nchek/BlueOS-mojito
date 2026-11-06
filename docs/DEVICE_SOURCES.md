@@ -23,7 +23,7 @@ All five repositories expose branch `17.0`:
 - `BoardConfig.mk` selects `kernel/xiaomi/mojito` and `mojito_defconfig`, asserts `mojito,sunny`, and includes common and device vendor board configs.
 - `BoardConfigCommon.mk` includes `vendor/xiaomi/sm6150-common/BoardConfigVendor.mk`.
 - `sm6150.mk` inherits `vendor/xiaomi/sm6150-common/sm6150-common-vendor.mk` and references Qualcomm CAF common and SM8150 audio projects.
-- The common and device vendor makefiles contain large generated `PRODUCT_COPY_FILES` lists under their respective `proprietary/` trees. Spot checks confirmed representative files are present in GitHub: common `gps.conf` and `libqmi_cci.so`; device `a615_zap.elf` and `com.qti.tuned.default.bin`. Binary blobs were fetched successfully in base64 mode. These checks prove only those sample paths exist; they do not prove complete coverage of every makefile reference. No root-level `proprietary-files.txt`, `extract-files.sh`, or `setup-makefiles.sh` was found at the checked paths, so a full automated inventory comparison is still unavailable.
+- The generated vendor makefiles contain **455 unique concrete `PRODUCT_COPY_FILES` source references**: 348 in `mojito-vendor.mk` and 107 in `sm6150-common-vendor.mk`. On 2026-11-06, both vendor repositories' complete recursive Git trees were fetched from branch `17.0` and every reference was matched against its corresponding `proprietary/` path: **455/455 present, 0 missing**. The GitHub trees were not truncated (622 device-vendor files and 602 common-vendor files). This is a source-tree presence check, not a local post-`repo sync` audit; it does not validate blob contents, checksums against the original firmware, ABI/linker compatibility, licensing, VINTF, or runtime behavior. The local `scripts/audit-vendor-blobs.py` remains useful to repeat the source-path check inside the actual synced Android workspace.
 
 ## SM6150 VINTF manifest ordering fix
 
@@ -127,3 +127,16 @@ The GitHub branch API was queried for every repository referenced by `manifests/
 | `android_vendor_xiaomi_sm6150-common` | `b6f3a74a92888bb8f0f52144d89488ad6fa3fd54` | 2026-02-08 | Patch libtinyxml2 to libtinyxml2-v34 |
 
 This closes the narrow question of whether the five manifest branch names currently exist. It does **not** validate their cross-repository compatibility, prove that the revisions build together, or replace a successful `repo sync` and product build. The manifest intentionally tracks branch `17.0`, so future syncs may resolve to newer commits.
+
+
+## Complete vendor source-path snapshot (2026-11-06)
+
+The `17.0` recursive Git trees were compared with every concrete `PRODUCT_COPY_FILES` source path in the generated vendor makefiles. All paths map beneath the corresponding repository's `proprietary/` directory.
+
+| Vendor tree | Makefile references | Files in Git tree | Matched | Missing |
+|---|---:|---:|---:|---:|
+| `android_vendor_xiaomi_mojito` | 348 | 622 | 348 | 0 |
+| `android_vendor_xiaomi_sm6150-common` | 107 | 602 | 107 | 0 |
+| **Total** | **455** | **1,224** | **455** | **0** |
+
+This closes the static file-presence audit for the current GitHub `17.0` snapshots. Re-run it after vendor branch updates and repeat `scripts/audit-vendor-blobs.py` after `repo sync`; the actual Android build remains authoritative.
