@@ -32,10 +32,19 @@ def audit(path: Path) -> tuple[list[str], int]:
     seen_fqnames: set[tuple[str, str]] = set()
     for hal in root.findall("hal"):
         hal_count += 1
-        name = (hal.findtext("name") or "").strip()
-        if not name:
+        names = [
+            (node.text or "").strip()
+            for node in hal.findall("name")
+            if (node.text or "").strip()
+        ]
+        if not names:
             errors.append(f"{path}: <hal> entry #{hal_count} has no <name>")
             continue
+        # Some legacy manifests group multiple HAL names in one <hal>. Their
+        # FQName-to-name mapping is ambiguous, so avoid a false duplicate claim.
+        if len(names) != 1:
+            continue
+        name = names[0]
         for fqname_node in hal.findall("fqname"):
             fqname = (fqname_node.text or "").strip()
             if not fqname:
