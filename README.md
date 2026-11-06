@@ -61,7 +61,7 @@ python3 scripts/audit-vendor-blobs.py ~/android/blueos-mojito \
   --makefile vendor/xiaomi/sm6150-common/sm6150-common-vendor.mk
 ```
 
-Exit codes: `0` = all parsed source paths exist, `1` = missing source paths, `2` = audit could not run (for example, a makefile is missing or no entries were parsed).
+Exit codes: `0` = all parsed source paths exist and none are unresolved, `1` = one or more concrete source paths are missing, `2` = the audit is incomplete or could not run (for example, a makefile is missing, no entries were parsed, or a source path contains an unresolved variable).
 
 **Scope limitation:** this checks source-file presence for concrete `PRODUCT_COPY_FILES` entries only. It does not validate ELF dependencies, Android ABI compatibility, firmware versions, licenses, VINTF compatibility, or runtime behavior.
 
