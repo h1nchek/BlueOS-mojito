@@ -78,7 +78,7 @@ def parse_modules(path: Path) -> list[Module]:
             continue
         end = matching_brace(tokens, index + 1)
         if end is None:
-            break
+            raise ValueError(f"{path}: unterminated block beginning at token {index}")
         module_type = tokens[index]
         body_start = index + 2
         name: str | None = None
@@ -145,6 +145,9 @@ def main() -> int:
             modules.extend(parse_modules(path))
         except OSError as exc:
             print(f"ERROR cannot read {path}: {exc}", file=sys.stderr)
+            return 2
+        except ValueError as exc:
+            print(f"ERROR malformed Android.bp: {exc}", file=sys.stderr)
             return 2
 
     if not modules:
