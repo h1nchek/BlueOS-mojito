@@ -12,9 +12,9 @@ Upstream BlueOS рекомендует Linux x86_64 (Ubuntu 22.04/24.04 или W
 
 ```bash
 ROOT="/path/to/BlueOS-mojito"
+repo init -u https://github.com/LineageOS/android.git -b lineage-24.0 --git-lfs --no-clone-bundle
 mkdir -p .repo/local_manifests
 cp "$ROOT/manifests/mojito-lineage24.xml" .repo/local_manifests/
-repo init -u https://github.com/LineageOS/android.git -b lineage-24.0 --git-lfs --no-clone-bundle
 repo sync -j8 --fail-fast
 python3 "$ROOT/scripts/patch-mojito-device-tree.py"
 ```
