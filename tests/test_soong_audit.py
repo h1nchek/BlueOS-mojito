@@ -9,6 +9,7 @@ SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "audit-soong-deps.py"
 SPEC = importlib.util.spec_from_file_location("soong_audit", SCRIPT)
 MODULE = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader
+sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
 
 
