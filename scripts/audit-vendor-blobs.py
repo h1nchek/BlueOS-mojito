@@ -88,6 +88,9 @@ def main() -> int:
     if not checked:
         print("ERROR: no concrete PRODUCT_COPY_FILES source paths were parsed.", file=sys.stderr)
         return 2
+    # Never report a clean audit when some source paths could not be resolved.
+    if unresolved:
+        return 2
     return 1 if missing else 0
 
 
