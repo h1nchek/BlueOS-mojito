@@ -8,7 +8,7 @@ Upstream BlueOS рекомендует Linux x86_64 (Ubuntu 22.04/24.04 или W
 
 ## Исходники
 
-Из корня клона этого репозитория:
+Ниже `ROOT` — путь к клону этого репозитория `BlueOS-mojito`. Из корня клона этого репозитория:
 
 ```bash
 mkdir -p .repo/local_manifests
@@ -21,6 +21,9 @@ cp manifests/blueos.xml .repo/local_manifests/
 ```bash
 repo init -u https://github.com/LineageOS/android.git -b lineage-24.0 --git-lfs --no-clone-bundle
 repo sync -j8
+
+# From the Android source root; ROOT points to the BlueOS-mojito clone.
+python3 "$ROOT/scripts/patch-mojito-device-tree.py"
 ```
 
 Сначала нужно получить чистую сборку LineageOS для `mojito`. Ветка устройства `17.0` сама по себе ещё не доказывает совместимость с каждым проектом LineageOS 24.0.
