@@ -33,7 +33,7 @@
 | Device, common, kernel and vendor source mapping | Reviewed / Изучено |
 | LineageOS 24.0 + Qualcomm CAF dependency mapping | Reviewed / Изучено |
 | SM6150 Codec2 vendor manifest ordering | Automatic guarded fix in build script / Автоматическое адресное исправление при сборке |
-| Proprietary vendor source files | 455 references inventoried; full existence check pending / 455 ссылок учтено, проверка файлов впереди |
+| Proprietary vendor source files | 455/455 source paths present in current vendor trees / Все 455 путей найдены в текущих vendor-деревьях |
 | Soong source preflight | Tool added; target-tree scan not run / Инструмент добавлен, проверка дерева не запускалась |
 | Free GitHub Actions preflight | Passed: Python compilation, shell syntax, XML manifests, 29 unit tests / Пройдено: Python, shell, XML и 29 тестов |
 | Full GitHub Actions ROM build | Not run: requires a provisioned Linux runner with large SSD/RAM / Не запускалась: нужен мощный Linux runner |
@@ -129,7 +129,7 @@ See [docs/DEVICE_SOURCES.md](docs/DEVICE_SOURCES.md) for the source and compatib
 
 ## План работ / Roadmap
 
-1. Finish the proprietary-file existence audit in a complete synced checkout.
+1. Repeat the vendor source-path audit after `repo sync`, then verify blob checksums, ELF dependencies, firmware compatibility, and ABI.
 2. Run the Soong source preflight across device/vendor/CAF trees, then resolve actual dependency errors against the pinned LineageOS 24.0 revision.
 3. Validate VINTF declarations and vendor service compatibility.
 4. Build plain LineageOS for `mojito` before applying the BlueOS layer.
