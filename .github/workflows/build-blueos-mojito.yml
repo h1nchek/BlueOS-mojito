@@ -83,23 +83,7 @@ jobs:
           fi
           mkdir -p "$ARTIFACT_DIR"
           for zip in "${zips[@]}"; do
-            python3 - "$zip" <<'PY'
-          import sys
-          import zipfile
-          path = sys.argv[1]
-          if not zipfile.is_zipfile(path):
-              raise SystemExit(f"ERROR: output is not a valid ZIP archive: {path}")
-          with zipfile.ZipFile(path) as archive:
-              names = set(archive.namelist())
-          markers = {
-              "payload.bin",
-              "META-INF/com/android/metadata",
-              "META-INF/com/google/android/update-binary",
-          }
-          if not names.intersection(markers):
-              raise SystemExit(f"ERROR: ZIP lacks a recognized Android OTA installer marker: {path}")
-          print(f"Validated Android OTA ZIP structure: {path}")
-          PY
+            python3 "$GITHUB_WORKSPACE/scripts/validate_ota_zip.py" "$zip"
             cp "$zip" "$ARTIFACT_DIR/"
           done
           (
