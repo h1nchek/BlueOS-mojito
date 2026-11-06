@@ -35,6 +35,9 @@ cp "$ROOT/manifests/blueos.xml" .repo/local_manifests/
 echo "Syncing LineageOS, BlueOS and mojito device sources..."
 repo sync -j"$JOBS"
 
+# Keep the common and Qualcomm SM6150 Codec2 vendor manifests in the product.
+python3 "$ROOT/scripts/patch-mojito-device-tree.py"
+
 mkdir -p vendor/extra
 PRODUCT_INCLUDE='$(call inherit-product, vendor/blueos/config/blueos.mk)'
 touch vendor/extra/product.mk
