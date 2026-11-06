@@ -22,12 +22,16 @@ jobs:
     # >=350 GiB free SSD. Standard GitHub-hosted runners are too small.
     runs-on: [self-hosted, linux, x64, android-build]
     timeout-minutes: 360
-    env:
-      ANDROID_DIR: ${{ runner.temp }}/android/blueos-mojito
-      ARTIFACT_DIR: ${{ github.workspace }}/artifacts
     steps:
       - name: Checkout port repository
         uses: actions/checkout@v4
+
+      - name: Set build paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "ANDROID_DIR=$RUNNER_TEMP/android/blueos-mojito" >> "$GITHUB_ENV"
+          echo "ARTIFACT_DIR=$GITHUB_WORKSPACE/artifacts" >> "$GITHUB_ENV"
 
       - name: Check build host
         shell: bash
