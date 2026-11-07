@@ -27,7 +27,8 @@ These are practical project requirements, not a guarantee that compilation will 
 2. Run the default one-pass BlueOS build in a clean workspace:
 
    ```bash
-   JOBS=8 ./scripts/build.sh "$HOME/android/mojito-blueos"
+   set -o pipefail
+   JOBS=8 ./scripts/build.sh "$HOME/android/mojito-blueos" 2>&1 | tee "$HOME/android/mojito-blueos-build.log"
    ```
 
    The default stage is `blueos`. It syncs LineageOS 24.0, the five pinned device/kernel/vendor repositories, and the pinned BlueOS source, then applies the device-tree fix and BlueOS product integration before building.
