@@ -1,17 +1,15 @@
-# Builder handoff — Redmi Note 10 (mojito)
+# One-time builder handoff — Redmi Note 10 (mojito)
 
-This guide is for a volunteer who has agreed to help compile the port. It does not claim that the current source set is build-validated.
+This is a request for **one full BlueOS build**, not recurring build support. The source set is statically reviewed but has not yet completed a full compile or boot test.
 
 ## Repository
 
 - Project: https://github.com/h1nchek/BlueOS-mojito
 - Branch: `main`
 - Target: Xiaomi Redmi Note 10 4G, codenames `mojito` / `sunny`
-- Platform baseline: LineageOS manifest branch `lineage-24.0`
+- Platform: LineageOS 24.0 / Android 17
 - Device, kernel, and vendor source branches: `17.0`
 - BlueOS source: commit pinned in `manifests/blueos.xml`
-
-Please inspect the manifests and current documentation before syncing. The device-source audit records what was checked and what remains unresolved.
 
 ## Host requirements
 
@@ -19,49 +17,43 @@ Use a trusted Linux x86_64 machine with:
 
 - at least 32 GiB RAM;
 - at least 350 GiB free SSD space in the build workspace;
-- Git, the Android `repo` launcher, Python 3, Java, and the standard LineageOS build dependencies.
+- Git, Android `repo`, Python 3, Java, and standard LineageOS build dependencies.
 
-These are project workflow gates and practical recommendations, not a guarantee that the build will succeed.
+These are practical project requirements, not a guarantee that compilation will succeed.
 
-## Build sequence
-
-Use separate clean workspaces for the two stages.
+## One-time build
 
 1. Clone this repository and inspect the current `main` commit.
-2. Run the clean LineageOS baseline:
+2. Run the default one-pass BlueOS build in a clean workspace:
 
    ```bash
-   BUILD_STAGE=lineage JOBS=8 ./scripts/build.sh "$HOME/android/mojito-lineage"
+   set -o pipefail
+   JOBS=8 ./scripts/build.sh "$HOME/android/mojito-blueos" 2>&1 | tee "$HOME/android/mojito-blueos-build.log"
    ```
 
-3. If the baseline completes, inspect the output and preserve its full log and resolved manifest.
-4. In a separate workspace, attempt BlueOS:
+   The default stage is `blueos`. It syncs LineageOS 24.0, the five pinned device/kernel/vendor repositories, and the pinned BlueOS source, then applies the device-tree fix and BlueOS product integration before building.
 
-   ```bash
-   BUILD_STAGE=blueos JOBS=8 ./scripts/build.sh "$HOME/android/mojito-blueos"
-   ```
+3. Check the complete log. It must contain successful BlueOS patch application messages and no `BlueOS: FAILED` lines.
+4. Locate the generated ROM ZIP under `out/target/product/mojito`, validate its archive structure, and calculate SHA-256.
+5. Return the ROM ZIP, checksum, complete build log, and `resolved-manifest-blueos.xml`.
 
-5. Check the BlueOS patch output. Any `BlueOS: FAILED` line is a blocker; do not present the result as a BlueOS build.
-6. Validate the resulting OTA ZIP with `scripts/validate_ota_zip.py` and calculate SHA-256.
-7. Return the build log, resolved manifest, artifact filename, checksum, and any required source changes.
+If the BlueOS build fails and a diagnosis is useful, a separate clean LineageOS build is available with `BUILD_STAGE=lineage`. That is an optional second compile, not part of the one-time request.
 
-Do not use the optional `manifests/blueos-pinned.xml` fallback automatically. Follow the failure investigation in [BUILDING.md](BUILDING.md) first.
+## Reporting
 
-## Reporting results
-
-For each stage, report one of:
+Report one of:
 
 - **Not attempted**
-- **Failed** — include the failing command and relevant redacted log excerpt
+- **Failed** — include the failing command and a relevant redacted log excerpt
 - **Compiled** — full build command exited successfully; include resolved manifest and artifact checksum
-- **Boot-tested** — include device model/variant, installation method, build fingerprint, and observed results
+- **Boot-tested** — include exact device variant, installation method, build fingerprint, and observed results
 
-A successful compile is not a boot test. Do not flash an unverified image on a daily-use device.
+A successful compile is not a boot test. Do not present an untested artifact as a working release.
 
 ## Safe collaboration
 
-- Work through a public branch and pull request.
-- Do not request or share the repository owner's password, personal access tokens, SSH private keys, signing keys, or runner registration token.
+- No recurring commitment is requested.
+- Do not request or share passwords, personal access tokens, SSH private keys, signing keys, or runner registration tokens.
 - Do not grant broad repository or organization access merely to run a build.
 - A self-hosted runner executes repository code. Only register a machine controlled by a trusted operator, and do not expose secrets to untrusted pull requests.
-- Keep authorship and contribution credit accurate: distinguish port integration, fixes, compilation, and device testing.
+- Keep credit accurate: distinguish port integration, build assistance, fixes, and device testing.

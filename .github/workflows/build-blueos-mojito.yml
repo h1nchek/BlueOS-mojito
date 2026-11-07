@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       stage:
-        description: "Build clean LineageOS first, or build BlueOS"
+        description: "Build BlueOS once (default), or clean LineageOS for diagnosis"
         required: true
         default: "blueos"
         type: choice
