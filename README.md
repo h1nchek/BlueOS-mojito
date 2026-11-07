@@ -115,6 +115,20 @@ It indexes named module blocks and compares literal entries in `defaults`, `shar
 | Kernel source | Xiaomi mojito tree, branch `17.0` |
 | Kernel baseline observed | Linux 4.14.357-openela |
 
+## Отдельная ветка GSI / Separate GSI track
+
+A separate TrebleDroid Android 16 GSI source track is being integrated on branch
+[`gsi/trebledroid-android16`](https://github.com/h1nchek/BlueOS-mojito/tree/gsi/trebledroid-android16).
+It uses the TrebleDroid Android 16 manifest and is deliberately isolated from the
+device-specific `mojito` ROM build.
+
+- [TrebleDroid GSI integration notes](docs/GSI_TREBLEDROID.md)
+- [TrebleDroid Android 16 local manifest](manifests/trebledroid-android16.xml)
+
+**Status:** source manifest connected; no successful GSI build or device boot has
+been claimed yet. The exact product target and generated makefiles must be checked
+against the synced Android 16 tree before enabling CI.
+
 ## Исходники / Source baseline
 
 Candidate device, common-device, kernel, and vendor repositories are pinned to branch `17.0` in [the LineageOS device manifest](manifests/mojito-lineage24.xml). BlueOS is pinned separately in [the BlueOS manifest](manifests/blueos.xml).
