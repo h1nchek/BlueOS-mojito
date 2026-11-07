@@ -5,7 +5,7 @@ on:
       stage:
         description: "Build clean LineageOS first, or build BlueOS"
         required: true
-        default: "blueos"
+        default: "lineage"
         type: choice
         options: [lineage, blueos]
       jobs:
