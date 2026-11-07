@@ -129,7 +129,7 @@ See [docs/DEVICE_SOURCES.md](docs/DEVICE_SOURCES.md) for the source and compatib
 
 ## План работ / Roadmap
 
-1. Run the prepared build pipeline on a suitable Linux host, starting with a clean LineageOS 24.0 build for `mojito`.
+1. Run one full BlueOS build for `mojito` directly from the pinned sources. Use the clean LineageOS mode only as an optional diagnostic if the BlueOS integration fails.
 2. Repeat the vendor source-path audit after `repo sync`; investigate checksums, ELF dependencies, firmware compatibility, and ABI where applicable.
 3. Run the Soong and VINTF checks against the fully synced source tree and fix any real build-time issues.
 4. Enable the BlueOS layer, resolve patch/application or compilation errors, and produce the first candidate ZIP.
@@ -138,9 +138,9 @@ See [docs/DEVICE_SOURCES.md](docs/DEVICE_SOURCES.md) for the source and compatib
 
 ## Сборка / Build
 
-The repository now contains a two-stage build wrapper at [scripts/build.sh](scripts/build.sh): clean LineageOS first, then the BlueOS integration. The latest GitHub Actions preflight on `main` (run #36) completed successfully, including Python compilation, shell syntax, XML manifest validation, and unit tests. This is a static/preflight check, **not** a full Android ROM build.
+The repository contains a build wrapper at [scripts/build.sh](scripts/build.sh) with two selectable modes: a one-pass BlueOS build (default) and a clean LineageOS diagnostic build. The latest GitHub Actions preflight on `main` (run #36) completed successfully, including Python compilation, shell syntax, XML manifest validation, and unit tests. This is a static/preflight check, **not** a full Android ROM build.
 
-The manual [GitHub Actions build workflow](.github/workflows/build-blueos-mojito.yml) requires a provisioned self-hosted runner: x86_64 Linux, the Android `repo` tool, at least 32 GB RAM, and 350 GB of free SSD space. The first full build is the next project milestone. See [docs/BUILDING.md](docs/BUILDING.md) for the build procedure and [docs/BUILDER_HANDOFF.md](docs/BUILDER_HANDOFF.md) for a concise handoff to a volunteer builder. Contribution and safety guidance is in [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
+The manual [GitHub Actions build workflow](.github/workflows/build-blueos-mojito.yml) defaults to the one-pass BlueOS build and requires a provisioned self-hosted runner: x86_64 Linux, the Android `repo` tool, at least 32 GB RAM, and 350 GB of free SSD space. The first full build is the next project milestone. See [docs/BUILDING.md](docs/BUILDING.md) for the build procedure and [docs/BUILDER_HANDOFF.md](docs/BUILDER_HANDOFF.md) for a concise handoff to a volunteer builder. Contribution and safety guidance is in [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
 ## Безопасность / Safety
 
