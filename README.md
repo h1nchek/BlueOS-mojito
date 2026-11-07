@@ -129,12 +129,11 @@ See [docs/DEVICE_SOURCES.md](docs/DEVICE_SOURCES.md) for the source and compatib
 
 ## План работ / Roadmap
 
-1. Run one full BlueOS build for `mojito` directly from the pinned sources. Use the clean LineageOS mode only as an optional diagnostic if the BlueOS integration fails.
-2. Repeat the vendor source-path audit after `repo sync`; investigate checksums, ELF dependencies, firmware compatibility, and ABI where applicable.
-3. Run the Soong and VINTF checks against the fully synced source tree and fix any real build-time issues.
-4. Enable the BlueOS layer, resolve patch/application or compilation errors, and produce the first candidate ZIP.
-5. Inspect boot/vendor_boot/DTB/DTBO packaging and validate the ZIP and SHA-256 checksum.
-6. Test boot and core hardware functions on a physical Redmi Note 10, then publish logs, known issues, and checksums.
+1. Run one full integrated BlueOS build for `mojito` directly from the pinned sources; the clean LineageOS mode is optional diagnostics only.
+2. Resolve any BlueOS patch-application or compilation errors found in that first run; preserve the complete log and resolved manifest.
+3. Repeat the vendor source-path audit after `repo sync`; investigate checksums, ELF dependencies, firmware compatibility, ABI, Soong dependencies, and VINTF where applicable.
+4. Inspect boot/vendor_boot/DTB/DTBO packaging and validate the resulting ZIP structure and SHA-256 checksum.
+5. Arrange a separate device test on a physical Redmi Note 10; publish only verified results, known issues, logs, and checksums.
 
 ## Сборка / Build
 
