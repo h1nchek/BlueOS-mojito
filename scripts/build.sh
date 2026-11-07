@@ -2,8 +2,8 @@
 set -Eeuo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ANDROID_DIR="${1:-$HOME/android/blueos-mojito}"
-# Start with a clean LineageOS baseline; opt into BlueOS only after it builds.
-BUILD_STAGE="${BUILD_STAGE:-lineage}"
+# Default to one full BlueOS build; use lineage only as an optional diagnostic.
+BUILD_STAGE="${BUILD_STAGE:-blueos}"
 case "$BUILD_STAGE" in lineage|blueos) ;; *) echo "ERROR: BUILD_STAGE must be lineage or blueos; got: $BUILD_STAGE" >&2; exit 1 ;; esac
 DEFAULT_JOBS="$(nproc)"
 if (( DEFAULT_JOBS > 8 )); then DEFAULT_JOBS=8; fi
