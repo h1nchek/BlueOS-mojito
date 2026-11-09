@@ -16,6 +16,12 @@ if [[ "$(uname -s)" != Linux || "$(uname -m)" != x86_64 ]]; then
   exit 1
 fi
 command -v repo >/dev/null 2>&1 || { echo "ERROR: Android repo tool is not installed or not in PATH." >&2; exit 1; }
+
+# Validate the local manifests before initializing a large Android checkout.
+python3 "$ROOT/scripts/audit_repo_manifests.py" "$ROOT/manifests/mojito-lineage24.xml"
+if [[ "$BUILD_STAGE" == blueos ]]; then
+  python3 "$ROOT/scripts/audit_repo_manifests.py" "$ROOT/manifests/blueos.xml"
+fi
 mkdir -p "$ANDROID_DIR"
 AVAILABLE_GB="$(df -BG "$ANDROID_DIR" | awk 'NR==2 {gsub(/G/,"",$4); print $4}')"
 if [[ -z "$AVAILABLE_GB" || "$AVAILABLE_GB" -lt 350 ]]; then
