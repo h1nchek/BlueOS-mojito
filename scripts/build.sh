@@ -40,6 +40,32 @@ fi
 echo "Syncing sources (stage: $BUILD_STAGE)..."
 repo sync -j"$JOBS" --fail-fast
 
+# Catch omitted device dependencies before Make/Soong fails with a vague
+# missing namespace or missing directory error.
+REQUIRED_SOURCE_DIRS=(
+  hardware/xiaomi
+  hardware/google/interfaces
+  hardware/google/pixel
+  hardware/qcom-caf/bootctrl
+  hardware/qcom-caf/common
+  hardware/qcom-caf/sm8150/audio
+  hardware/qcom-caf/sm8150/display
+  hardware/qcom-caf/sm8150/media
+  hardware/qcom-caf/wlan
+  vendor/qcom/opensource/dataservices
+  vendor/qcom/opensource/display
+  vendor/qcom/opensource/interfaces
+  vendor/qcom/opensource/usb
+)
+for relative_path in "${REQUIRED_SOURCE_DIRS[@]}"; do
+  if [[ ! -d "$ANDROID_DIR/$relative_path" ]]; then
+    echo "ERROR: required source project is missing after repo sync: $relative_path" >&2
+    echo "Check manifests/mojito-lineage24.xml and repo manifest group selection." >&2
+    exit 1
+  fi
+done
+echo "Required device and Qualcomm source projects are present."
+
 echo "Checking proprietary vendor source files..."
 python3 "$ROOT/scripts/audit-vendor-blobs.py" "$ANDROID_DIR"
 
