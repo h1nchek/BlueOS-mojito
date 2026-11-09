@@ -53,6 +53,7 @@ REQUIRED_SOURCE_DIRS=(
   hardware/qcom-caf/sm8150/media
   hardware/qcom-caf/wlan
   vendor/qcom/opensource/dataservices
+  vendor/qcom/opensource/commonsys-intf/display
   vendor/qcom/opensource/display
   vendor/qcom/opensource/interfaces
   vendor/qcom/opensource/usb
