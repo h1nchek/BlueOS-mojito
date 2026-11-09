@@ -10,7 +10,7 @@ Upstream BlueOS рекомендует Linux x86_64 (Ubuntu 22.04/24.04), 32 Г�
 
 ## Два независимых этапа
 
-Сначала нужно проверить чистую LineageOS 24.0, и только после этого — BlueOS. Скрипт scripts/build.sh поддерживает оба этапа через BUILD_STAGE.
+Сначала нужно проверить чистую LineageOS 24.0, и только после этого — BlueOS. Скрипт scripts/build.sh поддерживает оба этапа через BUILD_STAGE. Если переменная не задана, по умолчанию запускается безопасный первый этап — чистая LineageOS; BlueOS нужно выбирать явно.
 
 ### 1. Чистая LineageOS
 
@@ -67,7 +67,7 @@ source build/envsetup.sh
 
 ## GitHub Actions
 
-Откройте Actions → Build BlueOS for Redmi Note 10 (mojito) → Run workflow. Параметр stage:
+Откройте Actions → Build BlueOS for Redmi Note 10 (mojito) → Run workflow. По умолчанию выбран `lineage`; параметр stage:
 - lineage — чистая LineageOS без BlueOS;
 - blueos — экспериментальная BlueOS.
 
