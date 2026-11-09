@@ -3,4 +3,8 @@
 <manifest>
   <remote name="blueos" fetch="https://github.com/GDmio" />
   <project path="vendor/blueos" name="BlueOS" remote="blueos" revision="598e9148aabfc8cc3adb6e0f826437223c6f0450" />
+
+  <!-- BlueOS config/blueos.mk inherits this PDK-only project. Promote it
+       into the normal sync group so fonts.mk is present in a default sync. -->
+  <extend-project path="external/google-fonts/rubik" groups="default" />
 </manifest>
