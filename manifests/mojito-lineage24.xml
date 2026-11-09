@@ -10,6 +10,8 @@
   <project path="hardware/xiaomi" name="android_hardware_xiaomi" remote="lineage" revision="lineage-24.0" />
 
   <!-- Device-tree dependencies live in LineageOS manifest groups excluded by a default sync. -->
+  <extend-project path="hardware/google/interfaces" groups="default" />
+  <extend-project path="hardware/google/pixel" groups="default" />
   <extend-project path="hardware/qcom-caf/bootctrl" groups="default" />
   <extend-project path="hardware/qcom-caf/common" groups="default" />
   <extend-project path="hardware/qcom-caf/sm8150/audio" groups="default" />
