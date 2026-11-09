@@ -35,7 +35,7 @@
 | SM6150 Codec2 vendor manifest ordering | Automatic guarded fix in build script / Автоматическое адресное исправление при сборке |
 | Proprietary vendor source files | 455/455 referenced paths found in reviewed vendor repositories; re-audit after sync / 455/455 путей найдены в проверенных vendor-репозиториях; повторная проверка после sync |
 | Soong source preflight | Tool added; target-tree scan not run / Инструмент добавлен, проверка дерева не запускалась |
-| GitHub Actions preflight | Latest main run #36 passed: Python compilation, shell syntax, XML manifests and unit tests / Последний запуск main #36 успешен: Python, shell, XML и unit-тесты |
+| Static preflight | Manifest, vendor-blob and VINTF checks run automatically before compilation / Проверки манифестов, vendor blobs и VINTF запускаются перед компиляцией |
 | Full GitHub Actions ROM build | Waiting for a provisioned Linux build host / Ожидает подготовленного Linux-сервера для сборки |
 | ABI validation | Not run / Не выполнялась |
 | Full ROM build | Pending first builder run / Ожидает первой сборки |
@@ -138,7 +138,7 @@ See [docs/DEVICE_SOURCES.md](docs/DEVICE_SOURCES.md) for the source and compatib
 
 ## Сборка / Build
 
-The repository now contains a two-stage build wrapper at [scripts/build.sh](scripts/build.sh): clean LineageOS first, then the BlueOS integration. The latest GitHub Actions preflight on `main` (run #36) completed successfully, including Python compilation, shell syntax, XML manifest validation, and unit tests. This is a static/preflight check, **not** a full Android ROM build.
+The repository now contains a two-stage build wrapper at [scripts/build.sh](scripts/build.sh): clean LineageOS first, then the BlueOS integration. The build wrapper now runs local-manifest validation before `repo init`, then checks all concrete vendor blob source paths and validates the corrected device/Qualcomm VINTF XML after `repo sync`. These are static preflights, **not** a full Android ROM build. The manual full-build workflow requires a self-hosted runner.
 
 The manual [GitHub Actions build workflow](.github/workflows/build-blueos-mojito.yml) requires a provisioned self-hosted runner: x86_64 Linux, the Android `repo` tool, at least 32 GB RAM, and 350 GB of free SSD space. The first full build is the next project milestone. See [docs/BUILDING.md](docs/BUILDING.md) for the build procedure and [docs/BUILDER_HANDOFF.md](docs/BUILDER_HANDOFF.md) for a concise handoff to a volunteer builder. Contribution and safety guidance is in [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
@@ -159,7 +159,7 @@ The original scripts, documentation, diagrams, and project glue authored in this
 - BlueOS upstream: https://github.com/GDmio/BlueOS
 - BlueOS build guide: https://github.com/GDmio/BlueOS/blob/main/BUILDING.md
 - LineageOS source: https://github.com/LineageOS/android
-- Active device bring-up branch: [bringup/lineage-17-mojito](https://github.com/h1nchek/BlueOS-mojito/tree/bringup/lineage-17-mojito)
+- Older experimental branch: [bringup/lineage-17-mojito](https://github.com/h1nchek/BlueOS-mojito/tree/bringup/lineage-17-mojito) (diverged from `main`; do not use it for the current build pipeline)
 
 ---
 
