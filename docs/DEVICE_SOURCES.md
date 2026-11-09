@@ -37,10 +37,11 @@ Upstream `manifests/blueos-pinned.xml` currently contains 12 `extend-project` en
 
 ## Manifest coverage and unresolved dependencies
 
-The local device manifest declares the five device/common/kernel/vendor repositories plus the separate LineageOS `hardware/xiaomi` project. It also promotes the Qualcomm projects required by the device and vendor trees into the `default` sync group. This matters because the LineageOS 24.0 manifest places several of these projects in device-family groups (for example `qcom`, `msmnile`, and `kaanapali-vendor`), which are not guaranteed to be selected by an ordinary default `repo sync`.
+The local device manifest declares the five device/common/kernel/vendor repositories plus the separate LineageOS `hardware/xiaomi` project. It also promotes Google and Qualcomm projects required by the device and vendor trees into the `default` sync group. This matters because the LineageOS 24.0 manifest places several of these projects in device-family groups (for example `qcom`, `msmnile`, and `kaanapali-vendor`), which are not guaranteed to be selected by an ordinary default `repo sync`.
 
 The required group promotions currently cover:
 
+- `hardware/google/interfaces` and `hardware/google/pixel`;
 - `hardware/qcom-caf/bootctrl`, `common`, `sm8150/audio`, `sm8150/display`, `sm8150/media`, and `wlan`;
 - `vendor/qcom/opensource/dataservices`, `display`, `interfaces`, and `usb`.
 
