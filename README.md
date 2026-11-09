@@ -37,7 +37,7 @@
 | Soong source preflight | Tool added; target-tree scan not run / Инструмент добавлен, проверка дерева не запускалась |
 | Static preflight | Manifest, vendor-blob and VINTF checks run automatically before compilation / Проверки манифестов, vendor blobs и VINTF запускаются перед компиляцией |
 | Linux build host | Provisioned: Ubuntu 24.04, 10 vCPU, 35 GB RAM / Сервер подготовлен |
-| Android source synchronization | Started; previous terminal session was interrupted and sync must be resumed / Начата; требуется продолжить после обрыва сессии |
+| Android source synchronization | Completed once; first Soong analysis exposed missing dependency groups; manifest fixes committed and require a new sync / Один раз завершена; первый Soong-анализ выявил пропущенные группы зависимостей; исправленный манифест нужно синхронизировать повторно |
 | Full GitHub Actions ROM build | Not run / Не запускалась |
 | ABI validation | Not run / Не выполнялась |
 | Full ROM build | Pending first successful builder run / Ожидает первой успешной сборки |
