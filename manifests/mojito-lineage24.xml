@@ -17,6 +17,9 @@
   <extend-project path="hardware/qcom-caf/sm8150/media" groups="default" />
   <extend-project path="hardware/qcom-caf/wlan" groups="default" />
   <extend-project path="vendor/qcom/opensource/usb" groups="default" />
+  <extend-project path="vendor/qcom/opensource/dataservices" groups="default" />
+  <extend-project path="vendor/qcom/opensource/display" groups="default" />
+  <extend-project path="vendor/qcom/opensource/interfaces" groups="default" />
 
   <project path="kernel/xiaomi/mojito" name="android_kernel_xiaomi_mojito" remote="mojito" revision="87e3f1844a65ef9a1cb965fac6096a7dcd84f6ea" />
 
