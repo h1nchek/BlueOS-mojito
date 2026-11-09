@@ -9,6 +9,15 @@
 
   <project path="hardware/xiaomi" name="android_hardware_xiaomi" remote="lineage" revision="lineage-24.0" />
 
+  <!-- Device-tree dependencies live in LineageOS manifest groups excluded by a default sync. -->
+  <extend-project path="hardware/qcom-caf/bootctrl" groups="default" />
+  <extend-project path="hardware/qcom-caf/common" groups="default" />
+  <extend-project path="hardware/qcom-caf/sm8150/audio" groups="default" />
+  <extend-project path="hardware/qcom-caf/sm8150/display" groups="default" />
+  <extend-project path="hardware/qcom-caf/sm8150/media" groups="default" />
+  <extend-project path="hardware/qcom-caf/wlan" groups="default" />
+  <extend-project path="vendor/qcom/opensource/usb" groups="default" />
+
   <project path="kernel/xiaomi/mojito" name="android_kernel_xiaomi_mojito" remote="mojito" revision="87e3f1844a65ef9a1cb965fac6096a7dcd84f6ea" />
 
   <project path="vendor/xiaomi/mojito" name="android_vendor_xiaomi_mojito" remote="mojito" revision="ef30fe68e01b50088093b56da82457202ab1dfe3" />
