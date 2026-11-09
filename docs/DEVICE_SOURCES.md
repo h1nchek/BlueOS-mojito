@@ -43,7 +43,7 @@ The required group promotions currently cover:
 
 - `hardware/google/interfaces` and `hardware/google/pixel`;
 - `hardware/qcom-caf/bootctrl`, `common`, `sm8150/audio`, `sm8150/display`, `sm8150/media`, and `wlan`;
-- `vendor/qcom/opensource/dataservices`, `display`, `interfaces`, and `usb`.
+- `vendor/qcom/opensource/dataservices`, `commonsys-intf/display`, `display`, `interfaces`, and `usb`.
 
 The optional Leica/MIUI trees are guarded by `inherit-product-if-exists` and are not declared by this port manifest.
 
