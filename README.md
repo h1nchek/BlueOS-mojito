@@ -12,9 +12,9 @@
 
 </div>
 
-> **RU:** Это независимый порт BlueOS для Xiaomi Redmi Note 10 4G. Основная подготовительная работа с исходниками, манифестами, интеграцией и инструментами проверки выполнена. Проект подготовлен к первой полноценной сборке; готовой прошивки для установки пока нет.
+> **RU:** Это независимый порт BlueOS для Xiaomi Redmi Note 10 4G. Подготовлены исходники, манифесты, интеграция и инструменты предварительной проверки. Для первой сборки уже подготовлен удалённый Linux-сервер; синхронизация исходников начата, но предыдущая сессия оборвалась из-за потери соединения. Готовой прошивки для установки пока нет.
 >
-> **EN:** This is an independent BlueOS porting effort for the Xiaomi Redmi Note 10 4G. The source mapping, manifests, integration glue, and preflight tooling are prepared for the first full build. No installable ROM build is available yet.
+> **EN:** This is an independent BlueOS porting effort for the Xiaomi Redmi Note 10 4G. Source mapping, manifests, integration glue, and preflight tools are prepared. A remote Linux build host is provisioned and source synchronization has started, but the previous terminal session was interrupted by a connection loss. No installable ROM build is available yet.
 
 ---
 
@@ -36,9 +36,11 @@
 | Proprietary vendor source files | 455/455 referenced paths found in reviewed vendor repositories; re-audit after sync / 455/455 путей найдены в проверенных vendor-репозиториях; повторная проверка после sync |
 | Soong source preflight | Tool added; target-tree scan not run / Инструмент добавлен, проверка дерева не запускалась |
 | Static preflight | Manifest, vendor-blob and VINTF checks run automatically before compilation / Проверки манифестов, vendor blobs и VINTF запускаются перед компиляцией |
-| Full GitHub Actions ROM build | Waiting for a provisioned Linux build host / Ожидает подготовленного Linux-сервера для сборки |
+| Linux build host | Provisioned: Ubuntu 24.04, 10 vCPU, 35 GB RAM / Сервер подготовлен |
+| Android source synchronization | Started; previous terminal session was interrupted and sync must be resumed / Начата; требуется продолжить после обрыва сессии |
+| Full GitHub Actions ROM build | Not run / Не запускалась |
 | ABI validation | Not run / Не выполнялась |
-| Full ROM build | Pending first builder run / Ожидает первой сборки |
+| Full ROM build | Pending first successful builder run / Ожидает первой успешной сборки |
 | Boot and hardware tests | Pending a successful build and device testing / После успешной сборки и проверки на устройстве |
 | Flashable ZIP | Pending build / Появится после сборки |
 
@@ -129,18 +131,59 @@ See [docs/DEVICE_SOURCES.md](docs/DEVICE_SOURCES.md) for the source and compatib
 
 ## План работ / Roadmap
 
-1. Run the prepared build pipeline on a suitable Linux host, starting with a clean LineageOS 24.0 build for `mojito`.
-2. Repeat the vendor source-path audit after `repo sync`; investigate checksums, ELF dependencies, firmware compatibility, and ABI where applicable.
-3. Run the Soong and VINTF checks against the fully synced source tree and fix any real build-time issues.
-4. Enable the BlueOS layer, resolve patch/application or compilation errors, and produce the first candidate ZIP.
-5. Inspect boot/vendor_boot/DTB/DTBO packaging and validate the ZIP and SHA-256 checksum.
-6. Test boot and core hardware functions on a physical Redmi Note 10, then publish logs, known issues, and checksums.
+1. Resume and complete the LineageOS 24.0 source synchronization on the provisioned Linux host.
+2. Run the prepared build pipeline, starting with a clean LineageOS 24.0 build for `mojito`.
+3. Repeat the vendor source-path audit after `repo sync`; investigate checksums, ELF dependencies, firmware compatibility, and ABI where applicable.
+4. Run the Soong and VINTF checks against the fully synced source tree and fix any real build-time issues.
+5. Enable the BlueOS layer, resolve patch/application or compilation errors, and produce the first candidate ZIP.
+6. Inspect boot/vendor_boot/DTB/DTBO packaging and validate the ZIP and SHA-256 checksum.
+7. Test boot and core hardware functions on a physical Redmi Note 10, then publish logs, known issues, and checksums.
 
 ## Сборка / Build
 
-The repository now contains a two-stage build wrapper at [scripts/build.sh](scripts/build.sh): clean LineageOS first, then the BlueOS integration. The build wrapper now runs local-manifest validation before `repo init`, then checks all concrete vendor blob source paths and validates the corrected device/Qualcomm VINTF XML after `repo sync`. These are static preflights, **not** a full Android ROM build. The manual full-build workflow requires a self-hosted runner.
+The repository contains a two-stage build wrapper at [scripts/build.sh](scripts/build.sh): clean LineageOS first, then the BlueOS integration. The wrapper validates local manifests before `repo init`, then checks concrete vendor blob source paths and the corrected device/Qualcomm VINTF XML after `repo sync`. These are static preflights, **not** a full Android ROM build.
 
-The manual [GitHub Actions build workflow](.github/workflows/build-blueos-mojito.yml) requires a provisioned self-hosted runner: x86_64 Linux, the Android `repo` tool, at least 32 GB RAM, and 350 GB of free SSD space. The first full build is the next project milestone. See [docs/BUILDING.md](docs/BUILDING.md) for the build procedure and [docs/BUILDER_HANDOFF.md](docs/BUILDER_HANDOFF.md) for a concise handoff to a volunteer builder. Contribution and safety guidance is in [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
+### Keep long-running jobs alive
+
+Run long synchronization and compilation tasks inside `tmux`. This keeps the process running on the VPS when the browser tab, VNC connection, or SSH session disconnects.
+
+Install and start a named session:
+
+```bash
+sudo apt install tmux
+tmux new -s build
+```
+
+Detach without stopping the process: press `Ctrl+B`, then `D`.
+
+Reconnect to the session:
+
+```bash
+tmux attach -t build
+```
+
+If `repo sync` is interrupted, rerun the same `repo sync` command from the Android source directory; Repo will reuse completed downloads and fetch missing projects. Do not delete the `.repo` directory to recover from an ordinary network interruption.
+
+### Build host
+
+The current manual build host is Ubuntu 24.04 x86_64 with 10 vCPUs and 35 GB RAM. The build wrapper limits parallel jobs to 8 by default to keep memory use manageable. At least 350 GB of free SSD space is required by the script's preflight check.
+
+For the initial baseline build, run the script from this repository:
+
+```bash
+bash scripts/build.sh "$HOME/android/blueos-mojito"
+```
+
+For the separate experimental BlueOS stage, use a fresh source directory:
+
+```bash
+BUILD_STAGE=blueos JOBS=8 bash scripts/build.sh \
+  "$HOME/android/mojito-blueos"
+```
+
+Do not use the same source directory for the clean LineageOS baseline and the BlueOS stage; the script intentionally guards against stale BlueOS integration files.
+
+The manual [GitHub Actions build workflow](.github/workflows/build-blueos-mojito.yml) requires a provisioned self-hosted runner: x86_64 Linux, the Android `repo` tool, at least 32 GB RAM, and 350 GB of free SSD space. See [docs/BUILDING.md](docs/BUILDING.md) for the full procedure and [docs/BUILDER_HANDOFF.md](docs/BUILDER_HANDOFF.md) for a concise handoff to a volunteer builder. Contribution and safety guidance is in [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
 ## Безопасность / Safety
 
