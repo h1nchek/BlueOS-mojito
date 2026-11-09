@@ -39,7 +39,7 @@ BUILD_STAGE=blueos JOBS=8 "$ROOT/scripts/build.sh" "$HOME/android/mojito-blueos"
 - Device/common/kernel/vendor repos: immutable commit SHAs, resolved from branch 17.0 on 2026-11-09 and recorded in manifests/mojito-lineage24.xml.
 - BlueOS: фиксированный commit SHA в manifests/blueos.xml, чтобы повторные сборки не меняли исходники незаметно.
 
-После repo sync скрипт сохраняет разрешённый manifest с точными SHA проектов в resolved-manifest-lineage.xml или resolved-manifest-blueos.xml в корне репозитория. Workflow прикладывает этот файл к артефактам сборки.
+После repo sync скрипт сохраняет разрешённый manifest с точными SHA проектов в resolved-manifest-lineage.xml или resolved-manifest-blueos.xml в корне репозитория. Workflow прикладывает этот файл к артефактам сборки. До загрузки исходников скрипт проверяет структуру локальных XML-манифестов; после синхронизации проверяет наличие всех конкретных vendor blob paths, исправляет известный порядок SM6150 VINTF manifest declarations и выполняет структурную проверку двух VINTF XML. Эти проверки останавливают сборку при найденной ошибке, но не заменяют полноценные Make/Soong и checkvintf проверки.
 
 Ветка устройства 17.0 сама по себе ещё не доказывает совместимость с каждым проектом LineageOS 24.0. Сначала проверьте чистую базовую сборку. Если она не собирается, сначала исправьте ошибки device/vendor/kernel-интеграции и только затем переходите к BlueOS.
 
