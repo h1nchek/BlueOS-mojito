@@ -37,9 +37,16 @@ Upstream `manifests/blueos-pinned.xml` currently contains 12 `extend-project` en
 
 ## Manifest coverage and unresolved dependencies
 
-The local device manifest declares all five direct device, kernel and vendor repositories. The makefiles also reference platform projects expected from the LineageOS manifest and optional external vendor projects. The optional Leica/MIUI trees are guarded by `inherit-product-if-exists` and are not declared by this port manifest.
+The local device manifest declares the five device/common/kernel/vendor repositories plus the separate LineageOS `hardware/xiaomi` project. It also promotes the Qualcomm projects required by the device and vendor trees into the `default` sync group. This matters because the LineageOS 24.0 manifest places several of these projects in device-family groups (for example `qcom`, `msmnile`, and `kaanapali-vendor`), which are not guaranteed to be selected by an ordinary default `repo sync`.
 
-Source inspection does not prove that all proprietary files referenced by generated vendor makefiles exist, that firmware matches, or that every Qualcomm CAF project resolves to a compatible revision. A clean sync and product build are still required.
+The required group promotions currently cover:
+
+- `hardware/qcom-caf/bootctrl`, `common`, `sm8150/audio`, `sm8150/display`, `sm8150/media`, and `wlan`;
+- `vendor/qcom/opensource/dataservices`, `display`, `interfaces`, and `usb`.
+
+The optional Leica/MIUI trees are guarded by `inherit-product-if-exists` and are not declared by this port manifest.
+
+This closes a manifest-selection gap found during the November 9 audit; it does not prove that every module compiles or that all proprietary files and firmware are compatible. A clean sync, dependency checks, and product build are still required.
 
 ## Compatibility
 
