@@ -6,13 +6,13 @@ Checked on 2026-11-09. Source-level validation only; no successful build or boot
 
 All five repositories expose branch `17.0`. Their exact commit IDs were resolved from those refs and pinned in `manifests/mojito-lineage24.xml` on 2026-11-09:
 
-| Build path | Repository | Verification |
-|---|---|---|
-| `device/xiaomi/mojito` | https://github.com/ximi-mojito/device_xiaomi_mojito | Product, device and board makefiles inspected |
-| `device/xiaomi/sm6150-common` | https://github.com/ximi-mojito/device_xiaomi_sm6150-common | Common board and product makefiles inspected |
-| `kernel/xiaomi/mojito` | https://github.com/ximi-mojito/android_kernel_xiaomi_mojito | Branch and `mojito_defconfig` verified |
-| `vendor/xiaomi/mojito` | https://github.com/ximi-mojito/android_vendor_xiaomi_mojito | Device vendor makefile inspected |
-| `vendor/xiaomi/sm6150-common` | https://github.com/ximi-mojito/android_vendor_xiaomi_sm6150-common | Vendor board makefile exists; blob audit remains |
+| Build path | Repository | Pinned revision | Verification |
+|---|---|---|---|
+| `device/xiaomi/mojito` | [device_xiaomi_mojito](https://github.com/ximi-mojito/device_xiaomi_mojito) | `efdf9962669b` | Product, device and board makefiles inspected |
+| `device/xiaomi/sm6150-common` | [device_xiaomi_sm6150-common](https://github.com/ximi-mojito/device_xiaomi_sm6150-common) | `aae2067ea624` | Common board and product makefiles inspected |
+| `kernel/xiaomi/mojito` | [android_kernel_xiaomi_mojito](https://github.com/ximi-mojito/android_kernel_xiaomi_mojito) | `87e3f1844a65` | `mojito_defconfig` and kernel baseline inspected |
+| `vendor/xiaomi/mojito` | [android_vendor_xiaomi_mojito](https://github.com/ximi-mojito/android_vendor_xiaomi_mojito) | `ef30fe68e01b` | Device vendor makefile and blob source paths inspected |
+| `vendor/xiaomi/sm6150-common` | [android_vendor_xiaomi_sm6150-common](https://github.com/ximi-mojito/android_vendor_xiaomi_sm6150-common) | `b6f3a74a9288` | Common vendor makefile and blob source paths inspected |
 
 ## Verified makefile relationships
 
