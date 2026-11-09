@@ -1,10 +1,10 @@
 # Redmi Note 10 (mojito) — source audit
 
-Checked on 2026-11-06. Source-level validation only; no successful build or boot test has been recorded.
+Checked on 2026-11-09. Source-level validation only; no successful build or boot test has been recorded.
 
 ## Candidate device source set
 
-All five repositories expose branch `17.0`:
+All five repositories expose branch `17.0`. Their exact commit IDs were resolved from those refs and pinned in `manifests/mojito-lineage24.xml` on 2026-11-09:
 
 | Build path | Repository | Verification |
 |---|---|---|
