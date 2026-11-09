@@ -22,6 +22,8 @@ python3 "$ROOT/scripts/audit_repo_manifests.py" "$ROOT/manifests/mojito-lineage2
 if [[ "$BUILD_STAGE" == blueos ]]; then
   python3 "$ROOT/scripts/audit_repo_manifests.py" "$ROOT/manifests/blueos.xml"
 fi
+echo "Running repository unit tests..."
+python3 -m unittest discover -s "$ROOT/tests" -v
 mkdir -p "$ANDROID_DIR"
 AVAILABLE_GB="$(df -BG "$ANDROID_DIR" | awk 'NR==2 {gsub(/G/,"",$4); print $4}')"
 if [[ -z "$AVAILABLE_GB" || "$AVAILABLE_GB" -lt 350 ]]; then
@@ -58,6 +60,9 @@ REQUIRED_SOURCE_DIRS=(
   vendor/qcom/opensource/interfaces
   vendor/qcom/opensource/usb
 )
+if [[ "$BUILD_STAGE" == blueos ]]; then
+  REQUIRED_SOURCE_DIRS+=(external/google-fonts/rubik)
+fi
 for relative_path in "${REQUIRED_SOURCE_DIRS[@]}"; do
   if [[ ! -d "$ANDROID_DIR/$relative_path" ]]; then
     echo "ERROR: required source project is missing after repo sync: $relative_path" >&2
@@ -66,6 +71,16 @@ for relative_path in "${REQUIRED_SOURCE_DIRS[@]}"; do
   fi
 done
 echo "Required device and Qualcomm source projects are present."
+
+if [[ "$BUILD_STAGE" == blueos ]]; then
+  for required_file in vendor/blueos/vendorsetup.sh vendor/blueos/scripts/apply-patches.sh vendor/blueos/config/blueos.mk external/google-fonts/rubik/fonts.mk; do
+    if [[ ! -f "$ANDROID_DIR/$required_file" ]]; then
+      echo "ERROR: required BlueOS integration file is missing: $required_file" >&2
+      exit 1
+    fi
+  done
+  echo "BlueOS integration and font dependency are present."
+fi
 
 echo "Checking proprietary vendor source files..."
 python3 "$ROOT/scripts/audit-vendor-blobs.py" "$ANDROID_DIR"
