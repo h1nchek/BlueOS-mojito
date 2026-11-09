@@ -117,7 +117,7 @@ It indexes named module blocks and compares literal entries in `defaults`, `shar
 
 ## Исходники / Source baseline
 
-Candidate device, common-device, kernel, and vendor repositories are pinned to branch `17.0` in [the LineageOS device manifest](manifests/mojito-lineage24.xml). BlueOS is pinned separately in [the BlueOS manifest](manifests/blueos.xml).
+Candidate device, common-device, kernel, and vendor repositories are pinned to immutable commit SHAs resolved from branch `17.0` on 2026-11-09 in [the LineageOS device manifest](manifests/mojito-lineage24.xml). BlueOS is pinned separately in [the BlueOS manifest](manifests/blueos.xml).
 
 - Device tree: [ximi-mojito/device_xiaomi_mojito](https://github.com/ximi-mojito/device_xiaomi_mojito)
 - SM6150 common tree: [ximi-mojito/device_xiaomi_sm6150-common](https://github.com/ximi-mojito/device_xiaomi_sm6150-common)
