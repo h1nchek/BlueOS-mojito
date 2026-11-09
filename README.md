@@ -112,7 +112,7 @@ It indexes named module blocks and compares literal entries in `defaults`, `shar
 | SoC | Qualcomm Snapdragon 678 |
 | CPU architecture | 64-bit ARM |
 | Target platform | LineageOS 24.0 / Android 17 |
-| Kernel source | Xiaomi mojito tree, branch `17.0` |
+| Kernel source | Xiaomi mojito tree, immutable revision from branch `17.0` |
 | Kernel baseline observed | Linux 4.14.357-openela |
 
 ## Исходники / Source baseline
