@@ -36,7 +36,7 @@ BUILD_STAGE=blueos JOBS=8 "$ROOT/scripts/build.sh" "$HOME/android/mojito-blueos"
 ## Исходники и ревизии
 
 - LineageOS manifest: lineage-24.0.
-- Device/common/kernel/vendor repos: ветка 17.0 из manifests/mojito-lineage24.xml.
+- Device/common/kernel/vendor repos: immutable commit SHAs, resolved from branch 17.0 on 2026-11-09 and recorded in manifests/mojito-lineage24.xml.
 - BlueOS: фиксированный commit SHA в manifests/blueos.xml, чтобы повторные сборки не меняли исходники незаметно.
 
 После repo sync скрипт сохраняет разрешённый manifest с точными SHA проектов в resolved-manifest-lineage.xml или resolved-manifest-blueos.xml в корне репозитория. Workflow прикладывает этот файл к артефактам сборки.
