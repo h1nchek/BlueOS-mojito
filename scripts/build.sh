@@ -33,7 +33,17 @@ else
 fi
 echo "Syncing sources (stage: $BUILD_STAGE)..."
 repo sync -j"$JOBS" --fail-fast
+
+echo "Checking proprietary vendor source files..."
+python3 "$ROOT/scripts/audit-vendor-blobs.py" "$ANDROID_DIR"
+
+echo "Applying the guarded SM6150 VINTF ordering correction..."
 python3 "$ROOT/scripts/patch-mojito-device-tree.py"
+
+echo "Checking device and Qualcomm VINTF XML..."
+python3 "$ROOT/scripts/audit-vintf.py" \
+  device/xiaomi/sm6150-common/configs/manifests/manifest.xml \
+  hardware/qcom-caf/sm8150/media/conf_files/sm6150/c2_manifest_vendor.xml
 PRODUCT_INCLUDE='$(call inherit-product, vendor/blueos/config/blueos.mk)'
 if [[ "$BUILD_STAGE" == blueos ]]; then
   mkdir -p vendor/extra
