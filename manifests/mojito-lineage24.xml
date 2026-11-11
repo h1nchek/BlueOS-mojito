@@ -10,19 +10,19 @@
   <project path="hardware/xiaomi" name="android_hardware_xiaomi" remote="lineage" revision="6c12251713d74a01636482c9ffbdd9943addbfbf" />
 
   <!-- Device-tree dependencies live in LineageOS manifest groups excluded by a default sync. -->
-  <extend-project path="hardware/google/interfaces" groups="default" />
-  <extend-project path="hardware/google/pixel" groups="default" />
-  <extend-project path="hardware/qcom-caf/bootctrl" groups="default" />
-  <extend-project path="hardware/qcom-caf/common" groups="default" />
-  <extend-project path="hardware/qcom-caf/sm8150/audio" groups="default" />
-  <extend-project path="hardware/qcom-caf/sm8150/display" groups="default" />
-  <extend-project path="hardware/qcom-caf/sm8150/media" groups="default" />
-  <extend-project path="hardware/qcom-caf/wlan" groups="default" />
-  <extend-project path="vendor/qcom/opensource/usb" groups="default" />
-  <extend-project path="vendor/qcom/opensource/dataservices" groups="default" />
-  <extend-project path="vendor/qcom/opensource/commonsys-intf/display" groups="default" />
-  <extend-project path="vendor/qcom/opensource/display" groups="default" />
-  <extend-project path="vendor/qcom/opensource/interfaces" groups="default" />
+  <extend-project name="LineageOS/android_hardware_google_interfaces" path="hardware/google/interfaces" groups="default" />
+  <extend-project name="LineageOS/android_hardware_google_pixel" path="hardware/google/pixel" groups="default" />
+  <extend-project name="LineageOS/android_hardware_qcom_bootctrl" path="hardware/qcom-caf/bootctrl" groups="default" />
+  <extend-project name="LineageOS/android_hardware_qcom-caf_common" path="hardware/qcom-caf/common" groups="default" />
+  <extend-project name="LineageOS/android_hardware_qcom_audio" path="hardware/qcom-caf/sm8150/audio" groups="default" />
+  <extend-project name="LineageOS/android_hardware_qcom_display" path="hardware/qcom-caf/sm8150/display" groups="default" />
+  <extend-project name="LineageOS/android_hardware_qcom_media" path="hardware/qcom-caf/sm8150/media" groups="default" />
+  <extend-project name="LineageOS/android_hardware_qcom_wlan" path="hardware/qcom-caf/wlan" groups="default" />
+  <extend-project name="LineageOS/android_vendor_qcom_opensource_usb" path="vendor/qcom/opensource/usb" groups="default" />
+  <extend-project name="LineageOS/android_vendor_qcom_opensource_dataservices" path="vendor/qcom/opensource/dataservices" groups="default" />
+  <extend-project name="LineageOS/android_vendor_qcom_opensource_display-commonsys-intf" path="vendor/qcom/opensource/commonsys-intf/display" groups="default" />
+  <extend-project name="LineageOS/android_vendor_qcom_opensource_display" path="vendor/qcom/opensource/display" groups="default" />
+  <extend-project name="LineageOS/android_vendor_qcom_opensource_interfaces" path="vendor/qcom/opensource/interfaces" groups="default" />
 
   <project path="kernel/xiaomi/mojito" name="android_kernel_xiaomi_mojito" remote="mojito" revision="87e3f1844a65ef9a1cb965fac6096a7dcd84f6ea" />
 
