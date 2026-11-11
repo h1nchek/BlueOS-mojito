@@ -6,5 +6,5 @@
 
   <!-- BlueOS config/blueos.mk inherits this PDK-only project. Promote it
        into the normal sync group so fonts.mk is present in a default sync. -->
-  <extend-project path="external/google-fonts/rubik" groups="default" />
+  <extend-project name="platform/external/google-fonts/rubik" path="external/google-fonts/rubik" groups="default" />
 </manifest>
