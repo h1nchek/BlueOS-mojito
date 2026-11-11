@@ -48,17 +48,24 @@ REQUIRED_SOURCE_DIRS=(
   hardware/xiaomi
   hardware/google/interfaces
   hardware/google/pixel
+  hardware/google/pixel/pixelstats
+  hardware/google/pixel/power-libperfmgr
+  hardware/lineage/interfaces
+  hardware/lineage/interfaces/power-libperfmgr
   hardware/qcom-caf/bootctrl
   hardware/qcom-caf/common
+  hardware/qcom-caf/common/libqti-perfd-client
   hardware/qcom-caf/sm8150/audio
   hardware/qcom-caf/sm8150/display
   hardware/qcom-caf/sm8150/media
   hardware/qcom-caf/wlan
+  hardware/qcom-caf/wlan/qcwcn/wpa_supplicant_8_lib
   vendor/qcom/opensource/dataservices
   vendor/qcom/opensource/commonsys-intf/display
   vendor/qcom/opensource/display
   vendor/qcom/opensource/interfaces
   vendor/qcom/opensource/usb
+  vendor/qcom/opensource/usb/etc
 )
 if [[ "$BUILD_STAGE" == blueos ]]; then
   REQUIRED_SOURCE_DIRS+=(external/google-fonts/rubik)
