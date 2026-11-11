@@ -41,5 +41,16 @@ class RepoManifestAuditTests(unittest.TestCase):
             '<project name="one" remote="x"/></manifest>')
         self.assertTrue(any("missing revision" in item for item in errors))
 
+    def test_accepts_extend_project_with_name(self):
+        self.assertEqual([], self.check_xml(
+            '<manifest><extend-project name="LineageOS/android_frameworks_base" '
+            'path="frameworks/base" revision="abc123"/></manifest>'))
+
+    def test_rejects_extend_project_without_name(self):
+        errors = self.check_xml(
+            '<manifest><extend-project path="frameworks/base" '
+            'revision="abc123"/></manifest>')
+        self.assertTrue(any("missing required name" in item for item in errors))
+
     def test_rejects_invalid_xml(self):
         self.assertTrue(self.check_xml("<manifest>"))
