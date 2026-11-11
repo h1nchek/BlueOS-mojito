@@ -12,9 +12,9 @@
 
 </div>
 
-> **RU:** Это независимый порт BlueOS для Xiaomi Redmi Note 10 4G. Подготовлены исходники, манифесты, интеграция и инструменты предварительной проверки. Для первой сборки уже подготовлен удалённый Linux-сервер; синхронизация исходников начата, но предыдущая сессия оборвалась из-за потери соединения. Готовой прошивки для установки пока нет.
+> **RU:** Это независимый порт BlueOS для Xiaomi Redmi Note 10 4G. Подготовлены исходники, манифесты, интеграция и инструменты предварительной проверки. Предыдущий VPS был удалён; активного сервера и сохранённого Android checkout сейчас нет. Для первой сборки потребуется новый Linux-хост и повторная синхронизация исходников. Готовой прошивки для установки пока нет.
 >
-> **EN:** This is an independent BlueOS porting effort for the Xiaomi Redmi Note 10 4G. Source mapping, manifests, integration glue, and preflight tools are prepared. A remote Linux build host is provisioned and source synchronization has started, but the previous terminal session was interrupted by a connection loss. No installable ROM build is available yet.
+> **EN:** This is an independent BlueOS porting effort for the Xiaomi Redmi Note 10 4G. Source mapping, manifests, integration glue, and preflight tools are prepared. The previous VPS has been deleted; there is currently no active build host or saved Android source checkout. A new Linux host and a fresh source sync are required before building. No installable ROM build is available yet.
 
 ---
 
@@ -36,8 +36,8 @@
 | Proprietary vendor source files | 455/455 referenced paths found in reviewed vendor repositories; re-audit after sync / 455/455 путей найдены в проверенных vendor-репозиториях; повторная проверка после sync |
 | Soong source preflight | Tool added; target-tree scan not run / Инструмент добавлен, проверка дерева не запускалась |
 | Static preflight | Manifest, vendor-blob and VINTF checks run automatically before compilation / Проверки манифестов, vendor blobs и VINTF запускаются перед компиляцией |
-| Linux build host | Provisioned: Ubuntu 24.04, 10 vCPU, 35 GB RAM / Сервер подготовлен |
-| Android source synchronization | Completed once; first Soong analysis exposed missing dependency groups; manifest fixes committed and require a new sync / Один раз завершена; первый Soong-анализ выявил пропущенные группы зависимостей; исправленный манифест нужно синхронизировать повторно |
+| Linux build host | No active host; previous VPS deleted / Активного сервера нет, предыдущий VPS удалён |
+| Android source synchronization | Previous checkout was on the deleted VPS; fresh sync required / Предыдущий checkout находился на удалённом VPS; нужна новая синхронизация |
 | Full GitHub Actions ROM build | Not run / Не запускалась |
 | ABI validation | Not run / Не выполнялась |
 | Full ROM build | Pending first successful builder run / Ожидает первой успешной сборки |
@@ -131,7 +131,7 @@ See [docs/DEVICE_SOURCES.md](docs/DEVICE_SOURCES.md) for the source and compatib
 
 ## План работ / Roadmap
 
-1. Resume and complete the LineageOS 24.0 source synchronization on the provisioned Linux host.
+1. Provision a new Linux build host, then run a fresh LineageOS 24.0 source synchronization.
 2. Run the prepared build pipeline, starting with a clean LineageOS 24.0 build for `mojito`.
 3. Repeat the vendor source-path audit after `repo sync`; investigate checksums, ELF dependencies, firmware compatibility, and ABI where applicable.
 4. Run the Soong and VINTF checks against the fully synced source tree and fix any real build-time issues.
@@ -166,7 +166,7 @@ If `repo sync` is interrupted, rerun the same `repo sync` command from the Andro
 
 ### Build host
 
-The current manual build host is Ubuntu 24.04 x86_64 with 10 vCPUs and 35 GB RAM. The build wrapper limits parallel jobs to 8 by default to keep memory use manageable. At least 350 GB of free SSD space is required by the script's preflight check.
+No build host is currently active; the previous Ubuntu 24.04 VPS (10 vCPUs, 35 GB RAM) was deleted. A replacement should be Linux x86_64 with at least 32 GB RAM and 350 GB of free SSD space. The build wrapper limits parallel jobs to 8 by default to keep memory use manageable.
 
 For the initial baseline build, run the script from this repository:
 
