@@ -47,6 +47,8 @@ def validate_manifest(path: Path) -> list[str]:
             errors.append(f"{path}: project {name!r} references undeclared remote {remote!r}")
 
     for extension in root.findall("extend-project"):
+        if not extension.get("name"):
+            errors.append(f"{path}: <extend-project> is missing required name")
         if not (extension.get("path") or extension.get("name")):
             errors.append(f"{path}: <extend-project> needs path or name")
     return errors
